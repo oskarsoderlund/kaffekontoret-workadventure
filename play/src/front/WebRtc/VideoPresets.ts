@@ -209,7 +209,7 @@ const screenShareMaxPreset: Preset = {
  * Maximum capture resolution of a screen share, per quality setting.
  *
  * AV1 has no hardware encoder on most machines, and nothing downstream ever lowers the published
- * resolution. Google Meet caps screen shares the same way.
+ * resolution.
  */
 export const screenShareMaxResolution: Record<VideoQualitySetting, MediaTrackConstraints> = {
     low: { width: { max: 1280 }, height: { max: 720 } },
