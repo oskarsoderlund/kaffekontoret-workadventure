@@ -239,6 +239,7 @@
         bootPumpUnsubscriber = gameSceneIsLoadedStore.subscribe((isLoaded) => {
             if (isLoaded) {
                 stopBootPump?.();
+                bootPumpUnsubscriber?.();
             }
         });
 
