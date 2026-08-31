@@ -38,7 +38,7 @@ EXPOSE 3000 50053
 WORKDIR /usr/src
 ENV STORAGE_DIRECTORY=/maps
 RUN mkdir /maps && chown node:node /maps
-RUN apt-get update && apt-get install -y git curl
+RUN apt-get update && apt-get install -y git curl gosu
 COPY package.json package-lock.json ./
 COPY map-storage/package.json map-storage/package.json
 COPY libs/messages/package.json libs/messages/package.json
@@ -57,5 +57,5 @@ WORKDIR /usr/src/map-storage
 RUN mkdir ./dist
 
 HEALTHCHECK --interval=5s --timeout=10s --start-period=5s --retries=10 CMD curl -f http://localhost:3000/ping || exit 1
-USER node
-CMD ["npm", "run", "start"]
+COPY --chmod=755 deploy/railway/map-storage/entrypoint.sh /usr/local/bin/wa-map-storage-entrypoint
+ENTRYPOINT ["wa-map-storage-entrypoint"]

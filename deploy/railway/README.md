@@ -15,6 +15,8 @@ This adapter keeps the WorkAdventure core unchanged while exposing its multi-por
 
 Railway only exposes one target port per generated domain. WorkAdventure needs HTTP on port 3000 and websocket traffic on port 3001, plus path routing to its backend and map storage. `kk-wa-edge` provides that routing without changing the application code.
 
+Railway mounts volumes as `root`. The map-storage entrypoint fixes ownership on `/maps` and immediately drops privileges to the `node` user before starting the service.
+
 ## Edge routing
 
 - `/ws/*` to `kk-wa-play:3001`
