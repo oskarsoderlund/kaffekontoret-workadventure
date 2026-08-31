@@ -1,0 +1,28 @@
+:8080 {
+	encode zstd gzip
+
+	@websocket path /ws/*
+	handle @websocket {
+		reverse_proxy {$WA_PLAY_HOST}:3001
+	}
+
+	handle_path /api/* {
+		reverse_proxy {$WA_BACK_HOST}:8080
+	}
+
+	handle_path /map-storage/* {
+		reverse_proxy {$WA_MAP_STORAGE_HOST}:3000
+	}
+
+	handle_path /icon/* {
+		reverse_proxy {$WA_ICON_HOST}:8080
+	}
+
+	handle /lettericons/* {
+		reverse_proxy {$WA_ICON_HOST}:8080
+	}
+
+	handle {
+		reverse_proxy {$WA_PLAY_HOST}:3000
+	}
+}
