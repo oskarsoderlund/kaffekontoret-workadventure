@@ -69,17 +69,6 @@ function createScreenShareQualityStore() {
 export const screenShareQualityStore = createScreenShareQualityStore();
 
 /**
- * Resolution ceiling to apply to the captured screen, for the quality currently selected.
- */
-function maxResolutionConstraint(): MediaTrackConstraints {
-    const { width, height } = screenShareMaxResolution[get(screenShareQualityStore)];
-    return {
-        width: { max: width },
-        height: { max: height },
-    };
-}
-
-/**
  * A store containing whether the screen sharing button should be displayed or hidden.
  */
 export const screenSharingAvailableStore = isLiveStreamingStore;
@@ -219,7 +208,7 @@ export const screenSharingLocalStreamStore = derived<Readable<MediaStreamConstra
                 video: boolean | MediaTrackConstraints;
                 audio: boolean | MediaTrackConstraints;
             } = {
-                video: constraints.video ? maxResolutionConstraint() : false,
+                video: !!constraints.video,
                 audio: !!constraints.audio,
             };
             currentStreamPromise = navigator.mediaDevices.getDisplayMedia(displayMediaConstraints);
@@ -249,12 +238,12 @@ export const screenSharingLocalStreamStore = derived<Readable<MediaStreamConstra
 
                 currentStream = stream;
 
-                // The constraints above are only advisory (and the Electron capture path ignores them
-                // entirely), so enforce the cap on the track itself.
+                // Capped on the track rather than in the getDisplayMedia constraints: those are only
+                // advisory in some browsers, and the Electron capture path does not go through them.
                 const videoTrack = stream.getVideoTracks()[0];
                 if (videoTrack) {
                     try {
-                        await videoTrack.applyConstraints(maxResolutionConstraint());
+                        await videoTrack.applyConstraints(screenShareMaxResolution[get(screenShareQualityStore)]);
                     } catch (e) {
                         // Not fatal: we simply keep the native resolution.
                         console.warn("Could not cap the screen sharing resolution", e);
