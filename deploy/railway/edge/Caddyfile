@@ -1,5 +1,14 @@
 :8080 {
 	encode zstd gzip
+	log {
+		output stdout
+		format json
+	}
+
+	handle /health {
+		header Content-Type application/json
+		respond "{\"status\":\"ok\",\"service\":\"kk-wa-edge\",\"upstream\":\"9eaac2d8683f62d87b1aef9d1014fb6d62b4ba35\",\"commit\":\"{$RAILWAY_GIT_COMMIT_SHA}\"}" 200
+	}
 
 	@websocket path /ws/*
 	handle @websocket {

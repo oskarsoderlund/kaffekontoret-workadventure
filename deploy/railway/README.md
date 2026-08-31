@@ -17,6 +17,8 @@ Railway only exposes one target port per generated domain. WorkAdventure needs H
 
 Railway mounts volumes as `root`. The map-storage entrypoint fixes ownership on `/maps` and immediately drops privileges to the `node` user before starting the service.
 
+`GET /health` reports the pinned WorkAdventure SHA and the deployed fork commit. Edge access logs are emitted as JSON to standard output.
+
 ## Edge routing
 
 - `/ws/*` to `kk-wa-play:3001`
