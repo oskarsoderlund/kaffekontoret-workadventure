@@ -206,6 +206,20 @@ const screenShareMaxPreset: Preset = {
 };*/
 
 /**
+ * Maximum capture resolution of a screen share, per quality setting.
+ *
+ * Sharing a 4K or 5K display at its native resolution costs 4 to 7 times more to encode than 1080p,
+ * for a sharpness nobody sees in a video tile. Worse, the screen share is encoded in AV1, which has
+ * no hardware encoder on most machines, and neither LiveKit nor the P2P path ever lowers the
+ * published resolution on their own. Google Meet caps screen shares the same way.
+ */
+export const screenShareMaxResolution: Record<VideoQualitySetting, { width: number; height: number }> = {
+    low: { width: 1280, height: 720 },
+    recommended: { width: 1920, height: 1080 },
+    high: { width: 2560, height: 1440 },
+};
+
+/**
  * Select the most appropriate bandwidth and fps for your resolution.
  */
 export function selectVideoPreset(

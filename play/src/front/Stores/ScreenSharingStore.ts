@@ -4,6 +4,7 @@ import { asError } from "catch-unknown";
 import type { DesktopCapturerSource } from "../Interfaces/DesktopAppInterfaces";
 import { localUserStore } from "../Connection/LocalUserStore";
 import type { VideoQualitySetting } from "../Connection/LocalUserStore";
+import { screenShareMaxResolution } from "../WebRtc/VideoPresets";
 import LL from "../../i18n/i18n-svelte";
 import type { Streamable, WebRtcStreamable } from "../Space/Streamable";
 import { VideoBox } from "../Space/VideoBox";
@@ -66,6 +67,17 @@ function createScreenShareQualityStore() {
  * A store containing the screen share quality setting.
  */
 export const screenShareQualityStore = createScreenShareQualityStore();
+
+/**
+ * Resolution ceiling to apply to the captured screen, for the quality currently selected.
+ */
+function maxResolutionConstraint(): MediaTrackConstraints {
+    const { width, height } = screenShareMaxResolution[get(screenShareQualityStore)];
+    return {
+        width: { max: width },
+        height: { max: height },
+    };
+}
 
 /**
  * A store containing whether the screen sharing button should be displayed or hidden.
@@ -207,7 +219,7 @@ export const screenSharingLocalStreamStore = derived<Readable<MediaStreamConstra
                 video: boolean | MediaTrackConstraints;
                 audio: boolean | MediaTrackConstraints;
             } = {
-                video: !!constraints.video,
+                video: constraints.video ? maxResolutionConstraint() : false,
                 audio: !!constraints.audio,
             };
             currentStreamPromise = navigator.mediaDevices.getDisplayMedia(displayMediaConstraints);
@@ -236,6 +248,18 @@ export const screenSharingLocalStreamStore = derived<Readable<MediaStreamConstra
                 }
 
                 currentStream = stream;
+
+                // The constraints above are only advisory (and the Electron capture path ignores them
+                // entirely), so enforce the cap on the track itself.
+                const videoTrack = stream.getVideoTracks()[0];
+                if (videoTrack) {
+                    try {
+                        await videoTrack.applyConstraints(maxResolutionConstraint());
+                    } catch (e) {
+                        // Not fatal: we simply keep the native resolution.
+                        console.warn("Could not cap the screen sharing resolution", e);
+                    }
+                }
 
                 // If stream ends (for instance if user clicks the stop screen sharing button in the browser), let's close the view
                 for (const track of currentStream.getTracks()) {
