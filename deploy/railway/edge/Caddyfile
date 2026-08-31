@@ -5,9 +5,13 @@
 		format filter {
 			request>headers>Authorization delete
 			request>headers>Cookie delete
+			request>headers>Sec-Websocket-Key delete
 			request>headers>Sec-Websocket-Protocol delete
 			request>headers>X-Api-Key delete
 			request>headers>X-Forwarded-For delete
+			request>headers>X-Real-Ip delete
+			resp_headers>Sec-WebSocket-Protocol delete
+			resp_headers>Set-Cookie delete
 			request>remote_ip ip_mask 16 32
 			request>client_ip ip_mask 16 32
 			request>uri query {
