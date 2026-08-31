@@ -27,6 +27,7 @@
     import SelectMicrophone from "./SelectMicrophone.svelte";
     import SelectCamera from "./SelectCamera.svelte";
     import SelectSpeaker from "./SelectSpeaker.svelte";
+    import mediaPreviewSoundUrl from "./Sound/webrtc-in.mp3?url";
     import { IconMicrophoneOn, IconCamera } from "@wa-icons";
 
     interface Props {
@@ -41,7 +42,7 @@
 
     let selectedCamera: string | undefined = $state(undefined);
     let selectedMicrophone: string | undefined = $state(undefined);
-    const sound = new Audio("/resources/objects/webrtc-in.mp3");
+    const sound = new Audio(mediaPreviewSoundUrl);
 
     let legalStrings: string[] = [];
     if (legals?.termsOfUseUrl) {
