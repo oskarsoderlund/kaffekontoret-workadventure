@@ -316,6 +316,19 @@ export function decrementLivekitRoomCount() {
  */
 export const e2eHooks = {
     waitForNextFrame,
+    getCurrentPlayerPosition(): Coordinates {
+        const player = gameManager.getCurrentGameScene().CurrentPlayer;
+        return { x: player.x, y: player.y };
+    },
+    getRemotePlayersSnapshot(): { userId: number; name: string; position: Coordinates }[] {
+        return Array.from(gameManager.getCurrentGameScene().getRemotePlayersRepository().getPlayers().values()).map(
+            (player) => ({
+                userId: player.userId,
+                name: player.name,
+                position: { x: player.position.x, y: player.position.y },
+            }),
+        );
+    },
     getWebRtcConnectionsCount(): number {
         return webRtcConnectionsCount;
     },
