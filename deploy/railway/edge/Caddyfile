@@ -36,6 +36,11 @@
 		reverse_proxy {$WA_PLAY_HOST}:3001
 	}
 
+	# Pilot APIs keep their /api/pilot prefix; the generic WorkAdventure back route strips /api.
+	handle /api/pilot/* {
+		reverse_proxy {$WA_PILOT_BACKEND_HOST}:3000
+	}
+
 	handle_path /api/* {
 		reverse_proxy {$WA_BACK_HOST}:8080
 	}

@@ -1,0 +1,81 @@
+@font-face {
+    font-family: "Made Sunflower";
+    src: url("/static/fonts/MADESunflower.woff2") format("woff2");
+    font-display: swap;
+}
+
+:root {
+    color-scheme: dark;
+    font-family: Verdana, Geneva, sans-serif;
+    color: #faf0e5;
+    background: #1b3730;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+}
+
+main {
+    width: min(760px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 64px 0 96px;
+}
+
+img {
+    width: min(460px, 100%);
+    height: auto;
+    margin-bottom: 36px;
+}
+
+h1,
+h2 {
+    font-family: "Made Sunflower", Verdana, sans-serif;
+    font-weight: 400;
+}
+h1 {
+    font-size: clamp(42px, 8vw, 72px);
+    line-height: 0.95;
+    margin: 0 0 28px;
+}
+h2 {
+    color: #eafacf;
+    font-size: 30px;
+    margin-top: 48px;
+}
+p,
+li {
+    font-size: 17px;
+    line-height: 1.65;
+}
+li + li {
+    margin-top: 10px;
+}
+a {
+    color: #eafacf;
+    text-underline-offset: 3px;
+}
+.lede {
+    font-size: 20px;
+    color: #eafacf;
+}
+.note {
+    margin-top: 48px;
+    padding: 24px;
+    color: #1b3730;
+    background: #eafacf;
+    border-radius: 25px;
+}
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    margin-top: 48px;
+}
+nav a {
+    font-weight: 700;
+}

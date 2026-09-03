@@ -296,6 +296,20 @@ export class Zone {
     }
 
     /**
+     * Returns whether two users currently share a server-authoritative proximity group in this zone.
+     * This is intentionally derived from the back-end group messages rather than client positions.
+     */
+    public areUsersInSameGroup(firstUserId: number, secondUserId: number): boolean {
+        if (firstUserId === secondUserId) return false;
+        for (const group of this.groups.values()) {
+            if (group.userIds.includes(firstUserId) && group.userIds.includes(secondUserId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Notify listeners of this zone that this user entered
      */
     private notifyUserEnter(user: UserDescriptor, oldZone: ZoneDescriptor | undefined): void {

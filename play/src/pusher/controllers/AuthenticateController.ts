@@ -10,12 +10,20 @@ import Debug from "debug";
 import type { AuthTokenData } from "../services/JWTTokenManager";
 import { jwtTokenManager } from "../services/JWTTokenManager";
 import { openIDClient } from "../services/OpenIDClient";
-import { DISABLE_ANONYMOUS, FRONT_URL, MATRIX_PUBLIC_URI, PUSHER_URL } from "../enums/EnvironmentVariable";
+import {
+    AUTHENTICATION_ALLOWED_EMAIL_DOMAINS,
+    AUTHENTICATION_ALLOWED_EMAILS,
+    DISABLE_ANONYMOUS,
+    FRONT_URL,
+    MATRIX_PUBLIC_URI,
+    PUSHER_URL,
+} from "../enums/EnvironmentVariable";
 import { adminService } from "../services/AdminService";
 import { validateQuery } from "../services/QueryValidator";
 import { VerifyDomainService } from "../services/verifyDomain/VerifyDomainService";
 import { matrixProvider } from "../services/MatrixProvider";
 import { getClientIpFromXForwardedFor } from "../services/ClientIp";
+import { isAuthenticatedUserAllowed } from "../services/AuthenticatedUserAccess";
 import { BaseHttpController } from "./BaseHttpController";
 
 const debug = Debug("pusher:requests");
@@ -23,6 +31,7 @@ const debug = Debug("pusher:requests");
 export class AuthenticateController extends BaseHttpController {
     private readonly redirectToMatrixFile: string;
     private readonly redirectToPlayFile: string;
+    private readonly accessDeniedFile: string;
     constructor(app: Application) {
         super(app);
 
@@ -57,6 +66,11 @@ export class AuthenticateController extends BaseHttpController {
 
         // Pre-parse the file for speed (and validation)
         Mustache.parse(this.redirectToPlayFile);
+
+        const accessDeniedPath = fs.existsSync("dist/public/static/kaffekontoret/access-denied.html")
+            ? "dist/public/static/kaffekontoret/access-denied.html"
+            : "public/static/kaffekontoret/access-denied.html";
+        this.accessDeniedFile = fs.readFileSync(accessDeniedPath, "utf8");
     }
 
     routes(): void {
@@ -313,6 +327,17 @@ export class AuthenticateController extends BaseHttpController {
             const email = userInfo.email || userInfo.sub;
             if (!email) {
                 throw new Error("No email in the response");
+            }
+            if (
+                !isAuthenticatedUserAllowed(
+                    email,
+                    AUTHENTICATION_ALLOWED_EMAILS,
+                    AUTHENTICATION_ALLOWED_EMAIL_DOMAINS,
+                    userInfo.email_verified,
+                )
+            ) {
+                res.status(403).type("html").send(this.accessDeniedFile);
+                return;
             }
             const authToken = await jwtTokenManager.createAuthToken(
                 email,

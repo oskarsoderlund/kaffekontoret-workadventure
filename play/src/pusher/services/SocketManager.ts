@@ -100,6 +100,14 @@ export class SocketManager implements ZoneEventListener {
         });
     }
 
+    /**
+     * Server-authoritative proximity check used by consent context minting.
+     * It fails closed when either member is not connected to the requested room.
+     */
+    public areUsersInSameGroup(roomId: string, firstUserUuid: string, secondUserUuid: string): boolean {
+        return this.rooms.get(roomId)?.areUsersInSameGroup(firstUserUuid, secondUserUuid) ?? false;
+    }
+
     async handleAdminRoom(client: AdminSocket, roomId: string): Promise<void> {
         const apiClient = await apiClientRepository.getClient(roomId, GRPC_MAX_MESSAGE_SIZE);
         const socketData = client.getUserData();

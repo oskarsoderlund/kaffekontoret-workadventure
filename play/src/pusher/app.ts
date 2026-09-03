@@ -33,6 +33,8 @@ import { MatrixRoomAreaController } from "./controllers/MatrixRoomAreaController
 import { LocalScriptController } from "./controllers/LocalScriptController";
 import { LivekitWebhookController } from "./controllers/LivekitWebhookController";
 import { videoQualityAnalyticsQueue } from "./services/VideoQualityAnalyticsQueue";
+import { PilotSessionController } from "./controllers/PilotSessionController";
+import { PilotContextTokenController } from "./controllers/PilotContextTokenController";
 
 const VIDEO_QUALITY_ANALYTICS_CAPABILITY = "api/analytics/video-quality-batch";
 
@@ -93,6 +95,8 @@ class App {
 
         // Http controllers
         new AuthenticateController(this.app);
+        new PilotSessionController(this.app, jwtTokenManager);
+        new PilotContextTokenController(this.app, jwtTokenManager);
         new MapController(this.app);
         if (PROMETHEUS_PORT) {
             this.prometheusWebserver = express();

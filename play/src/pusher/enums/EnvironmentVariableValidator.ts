@@ -221,6 +221,35 @@ export const EnvironmentVariables = z.object({
         "Policy for avatar naming: 'user_input', 'allow_override_opid', or 'force_opid'",
     ),
     OPENID_TAGS_CLAIM: z.string().optional().describe("JWT claim containing user tags/roles"),
+    AUTHENTICATION_ALLOWED_EMAILS: z
+        .string()
+        .optional()
+        .transform((value) =>
+            toArray(value)
+                .map((email) => email.trim().toLowerCase())
+                .filter(Boolean),
+        )
+        .describe("Comma-separated email addresses allowed to complete OpenID Connect login"),
+    AUTHENTICATION_ALLOWED_EMAIL_DOMAINS: z
+        .string()
+        .optional()
+        .transform((value) =>
+            toArray(value)
+                .map((domain) => domain.trim().toLowerCase().replace(/^@/, ""))
+                .filter(Boolean),
+        )
+        .describe("Comma-separated email domains allowed to complete OpenID Connect login"),
+    PILOT_SESSION_SECRET: z
+        .string()
+        .min(32)
+        .optional()
+        .describe("Secret used to mint short-lived tokens for the separate Kaffekontoret pilot backend"),
+    PILOT_WORKSPACE_ID: z
+        .string()
+        .min(1)
+        .max(128)
+        .optional()
+        .describe("Stable workspace identifier shared with the separate Kaffekontoret pilot backend"),
 
     DISABLE_ANONYMOUS: BoolAsString.optional()
         .transform((val) => toBool(val, false))

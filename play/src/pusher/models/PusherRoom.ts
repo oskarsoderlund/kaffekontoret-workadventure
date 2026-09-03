@@ -59,6 +59,22 @@ export class PusherRoom {
         return this.positionNotifier.isEmpty();
     }
 
+    /**
+     * Resolves the current numeric back-end user ids from authenticated sockets and checks their group.
+     * The room URL alone is never sufficient to mint a consent context.
+     */
+    public areUsersInSameGroup(firstUserUuid: string, secondUserUuid: string): boolean {
+        let firstUserId: number | undefined;
+        let secondUserId: number | undefined;
+        for (const listener of this.listeners) {
+            const data = listener.getUserData();
+            if (data.userUuid === firstUserUuid && Number.isInteger(data.userId)) firstUserId = data.userId;
+            if (data.userUuid === secondUserUuid && Number.isInteger(data.userId)) secondUserId = data.userId;
+        }
+        if (firstUserId === undefined || secondUserId === undefined) return false;
+        return this.positionNotifier.areUsersInSameGroup(firstUserId, secondUserId);
+    }
+
     public needsUpdate(versionNumber: number): boolean {
         if (this.versionNumber < versionNumber) {
             this.versionNumber = versionNumber;

@@ -28,6 +28,7 @@
     import { pwaInstallProfileMenuEligibleStore } from "../../../Stores/PwaInstallStore";
     import { selectCharacterSceneVisibleStore } from "../../../Stores/SelectCharacterStore";
     import { selectCompanionSceneVisibleStore } from "../../../Stores/SelectCompanionStore";
+    import { pilotPanelVisibleStore } from "../../../Stores/PilotPanelStore";
     import { getStatusInformation } from "../../../Utils/AvailabilityStatus";
     import { LL } from "../../../../i18n/i18n-svelte";
     import ActionBarButton from "../ActionBarButton.svelte";
@@ -35,7 +36,7 @@
     import Companion from "../../Companion/Companion.svelte";
     import ExternalComponents from "../../ExternalModules/ExternalComponents.svelte";
     import CamSettingsIcon from "../../Icons/CamSettingsIcon.svelte";
-    import { IconBug, IconFileDownload, IconHelpCircle, IconLogout } from "../../Icons";
+    import { IconBug, IconExternalLink, IconFileDownload, IconHelpCircle, IconLogout } from "../../Icons";
     import ProfilIcon from "../../Icons/ProfilIcon.svelte";
     import SettingsIcon from "../../Icons/SettingsIcon.svelte";
     import Woka from "../../Woka/WokaFromUserId.svelte";
@@ -184,6 +185,15 @@
         </ActionBarButton>
 
         <HeaderMenuItem label={$LL.menu.sub.settings()} />
+        <ActionBarButton
+            label="Kaffekontoret"
+            onclick={() => {
+                pilotPanelVisibleStore.set(true);
+                openedMenuStore.close("profileMenu");
+            }}
+        >
+            <span class="text-xl" aria-hidden="true">☕</span>
+        </ActionBarButton>
         <ActionBarButton label={$LL.actionbar.editCamMic()} onclick={openEnableCameraScene}>
             <CamSettingsIcon />
         </ActionBarButton>
@@ -250,6 +260,19 @@
             <div class="text-start leading-4 text-white flex items-center">
                 {$LL.menu.profile.helpAndTips()}
             </div>
+        </button>
+
+        <button
+            onclick={() => {
+                window.open("/static/kaffekontoret/source.html", "_blank", "noopener,noreferrer");
+                openedMenuStore.close("profileMenu");
+            }}
+            class="group flex p-2 gap-2 items-center hover:bg-white/10 transition-all cursor-pointer font-bold text-sm w-full pointer-events-auto text-start rounded"
+        >
+            <div class="transition-all w-6 h-6 aspect-square text-center flex items-center justify-center">
+                <IconExternalLink height="20" width="20" class="text-white" />
+            </div>
+            <div class="text-start leading-4 text-white flex items-center">Källkod och licens</div>
         </button>
 
         {#if ENABLE_OPENID && $userIsConnected}

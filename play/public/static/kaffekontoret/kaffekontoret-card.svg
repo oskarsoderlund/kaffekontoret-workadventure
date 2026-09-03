@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Kaffekontoret</title>
+  <desc id="desc">Kaffekassans lekfulla digitala 2D-kontor</desc>
+  <rect width="1200" height="630" fill="#1B3730"/>
+  <circle cx="1020" cy="92" r="182" fill="#EAFACF" opacity=".12"/>
+  <circle cx="108" cy="596" r="250" fill="#FAF0E5" opacity=".08"/>
+  <rect x="112" y="112" width="178" height="178" rx="52" fill="#EAFACF"/>
+  <path d="M153 171h83v40c0 32-19 51-42 51s-41-19-41-51v-40Z" fill="#1B3730"/>
+  <path d="M236 181h12c32 0 32 45 4 51-5 1-10 1-16 1" fill="none" stroke="#1B3730" stroke-width="14" stroke-linecap="round"/>
+  <path d="M173 153c-9-12 8-16 0-30M198 153c-9-12 8-16 0-30M223 153c-9-12 8-16 0-30" fill="none" stroke="#1B3730" stroke-width="8" stroke-linecap="round"/>
+  <text x="112" y="405" fill="#FAF0E5" font-family="Made Sunflower, Verdana, sans-serif" font-size="92">Kaffekontoret</text>
+  <text x="118" y="466" fill="#EAFACF" font-family="Verdana, sans-serif" font-size="28">Spontana samtal. Egen värld. Full kontroll.</text>
+</svg>

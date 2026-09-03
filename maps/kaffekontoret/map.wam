@@ -1,0 +1,12 @@
+{
+  "version": "2.1.0",
+  "mapUrl": "./map.tmj",
+  "areas": [],
+  "entities": {},
+  "entityCollections": [],
+  "metadata": {
+    "name": "Kaffekontoret",
+    "description": "En lekfull arbetsplats med central kontorsyta och tomma expansionsvingar.",
+    "copyright": "Kaffekontoret intern pilot. Tileset credits and licenses are retained in map.tmj."
+  }
+}

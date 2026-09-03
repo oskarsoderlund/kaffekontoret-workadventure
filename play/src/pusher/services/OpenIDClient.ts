@@ -121,6 +121,7 @@ class OpenIDClient {
     ): Promise<{
         tags: string[] | undefined;
         email: string;
+        email_verified: boolean | undefined;
         sub: string;
         access_token: string;
         username: string;
@@ -163,6 +164,7 @@ class OpenIDClient {
                         return {
                             ...res,
                             email: res.email ?? "",
+                            email_verified: res.email_verified,
                             sub: res.sub,
                             access_token: tokenSet.access_token ?? "",
                             username: res[OPID_USERNAME_CLAIM] as string,

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Kaffekontoret</title>
+  <desc id="desc">En kaffekopp med bokstäverna KK</desc>
+  <rect width="512" height="512" rx="112" fill="#1B3730"/>
+  <path d="M114 195h235v104c0 74-50 121-118 121s-117-47-117-121V195Z" fill="#EAFACF"/>
+  <path d="M349 225h24c52 0 67 80 22 104-13 7-28 9-46 9" fill="none" stroke="#EAFACF" stroke-width="30" stroke-linecap="round"/>
+  <path d="M184 158c-20-23 18-31 0-56M245 158c-20-23 18-31 0-56M306 158c-20-23 18-31 0-56" fill="none" stroke="#FAF0E5" stroke-width="18" stroke-linecap="round"/>
+  <text x="232" y="324" fill="#1B3730" font-family="Verdana, sans-serif" font-size="82" font-weight="700" text-anchor="middle">KK</text>
+</svg>

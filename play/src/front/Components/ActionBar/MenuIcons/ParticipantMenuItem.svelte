@@ -21,6 +21,8 @@
     import type { MeetingParticipant } from "../../../Stores/MeetingInvitationStore";
     import WokaFromUserId from "../../Woka/WokaFromUserId.svelte";
     import Spinner from "../../Icons/Spinner.svelte";
+    import ActivityBadge from "../../ActivityBadge.svelte";
+    import ConsentActionButtons from "../../ConsentActionButtons.svelte";
     import HeaderMenuItem from "./HeaderMenuItem.svelte";
     import ParticipantWoka from "./ParticipantWoka.svelte";
     import {
@@ -351,12 +353,19 @@
                                         </div>
                                         <div class="min-w-0 flex-1 overflow-hidden">
                                             <div class="font-medium text-white text-sm truncate" title={item.name}>
-                                                {item.name}
+                                                <span class="inline-flex max-w-full items-center gap-1.5"
+                                                    ><span class="truncate">{item.name}</span><ActivityBadge
+                                                        userId={item.uuid}
+                                                    /></span
+                                                >
                                             </div>
                                             {#if item.uuid?.includes("@")}
                                                 <div class="text-xxs text-white/70 truncate" title={item.uuid}>
                                                     {item.uuid}
                                                 </div>
+                                            {/if}
+                                            {#if item.uuid?.includes("@")}
+                                                <ConsentActionButtons recipientId={item.uuid} />
                                             {/if}
                                         </div>
                                     </div>
@@ -440,12 +449,19 @@
                             </div>
                             <div class="min-w-0 flex-1">
                                 <div class="font-medium text-white text-sm truncate">
-                                    {item.name}
+                                    <span class="inline-flex max-w-full items-center gap-1.5"
+                                        ><span class="truncate">{item.name}</span><ActivityBadge
+                                            userId={item.uuid}
+                                        /></span
+                                    >
                                 </div>
                                 {#if item.uuid?.includes("@")}
                                     <div class="text-xxs text-white/70 truncate" title={item.uuid}>
                                         {item.uuid}
                                     </div>
+                                {/if}
+                                {#if item.uuid?.includes("@")}
+                                    <ConsentActionButtons recipientId={item.uuid} />
                                 {/if}
                             </div>
                         </div>

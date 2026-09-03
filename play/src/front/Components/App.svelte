@@ -33,6 +33,8 @@
     import { FileListener } from "../Phaser/FileUpload/FileListener";
     import { isStructuredCloneSupported } from "../Utils/BrowserCompatibility";
     import { gameSceneIsLoadedStore } from "../Stores/GameSceneStore";
+    import { localUserStore } from "../Connection/LocalUserStore";
+    import { clearPilotSession, setPilotSession } from "../Api/PilotApiClient";
     import GameOverlay from "./GameOverlay.svelte";
     import CoWebsitesContainer from "./EmbedScreens/CoWebsitesContainer.svelte";
     import BrowserNotSupported from "./BrowserNotSupported/BrowserNotSupported.svelte";
@@ -45,8 +47,61 @@
     let canvas: HTMLCanvasElement;
     let handleCanvasClick: () => void;
     let browserNotSupported = $state(false);
+    let pilotSessionRefreshTimer: number | undefined;
+
+    async function publishPilotSession(): Promise<void> {
+        const authToken = localUserStore.getAuthToken();
+        if (!authToken) {
+            clearPilotSession();
+            return;
+        }
+        try {
+            const response = await fetch("/pilot/session", {
+                method: "POST",
+                headers: { authorization: `Bearer ${authToken}` },
+            });
+            if (!response.ok) {
+                clearPilotSession();
+                return;
+            }
+            const payload = (await response.json()) as { token?: unknown; extensionToken?: unknown };
+            if (
+                typeof payload.token !== "string" ||
+                payload.token.length < 32 ||
+                typeof payload.extensionToken !== "string" ||
+                payload.extensionToken.length < 32
+            ) {
+                clearPilotSession();
+                return;
+            }
+            window.postMessage(
+                {
+                    type: "kaffekontoret-pilot-session",
+                    token: payload.token,
+                    extensionToken: payload.extensionToken,
+                    backendUrl: `${window.location.origin}/`,
+                },
+                window.location.origin,
+            );
+            setPilotSession({
+                token: payload.token,
+                extensionToken: payload.extensionToken,
+                workAdventureAuthToken: authToken,
+                backendUrl: window.location.origin,
+            });
+        } catch {
+            // The pilot extension is optional; never interrupt the workspace when it is unavailable.
+        }
+    }
 
     onMount(() => {
+        publishPilotSession().catch(() => undefined);
+        pilotSessionRefreshTimer = window.setInterval(
+            () => {
+                publishPilotSession().catch(() => undefined);
+            },
+            8 * 60 * 1_000,
+        );
         // Check browser compatibility before initializing the app
         if (!isStructuredCloneSupported()) {
             browserNotSupported = true;
@@ -147,7 +202,7 @@
 
         const config: Phaser.Types.Core.GameConfig = {
             type: mode,
-            title: "WorkAdventure",
+            title: "Kaffekontoret",
             scale: {
                 parent: gameDiv,
                 width: gameSize.width,
@@ -204,7 +259,7 @@
                     }
                 },
             },
-            backgroundColor: "#1b2a41",
+            backgroundColor: "#1B3730",
         };
 
         game = new Game(config);
@@ -262,6 +317,7 @@
     });
 
     onDestroy(() => {
+        if (pilotSessionRefreshTimer !== undefined) window.clearInterval(pilotSessionRefreshTimer);
         canvasSizeUnsubscriber?.();
         if (canvas && handleCanvasClick) {
             canvas.removeEventListener("click", handleCanvasClick);

@@ -17,6 +17,7 @@
 @import "loader.css";
 @import "input.css";
 @import "warning-toast.css";
+@import "kaffekontoret-theme.css";
 
 @source "../../**/*.{html,js,svelte,ts}";
 @source "../../../index.html";

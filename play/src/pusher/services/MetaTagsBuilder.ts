@@ -13,29 +13,28 @@ import { ADMIN_API_URL } from "../enums/EnvironmentVariable";
 import { adminService } from "./AdminService";
 
 export const MetaTagsDefaultValue: RequiredMetaTagsData = {
-    title: "WorkAdventure",
-    description:
-        "Organize your online event in WorkAdventure to recreate spontaneous social interactions. Connect, collaborate and have fun with your teammates and attendees.",
-    author: "WorkAdventure team",
-    provider: "WorkAdventure",
+    title: "Kaffekontoret",
+    description: "Kaffekassans lekfulla 2D-kontor för spontana samtal, fokus och vardagligt samarbete.",
+    author: "Kaffekassan",
+    provider: "Kaffekassan",
     favIcons: [
         {
             rel: "icon",
             sizes: "512x512",
-            src: "/static/images/favicons/favicon-512x512.svg",
+            src: "/static/kaffekontoret/kk-icon.svg",
         },
     ],
     manifestIcons: [
         {
-            src: "/static/images/favicons/icon-512x512.png",
+            src: "/static/kaffekontoret/kk-icon.svg",
             sizes: "512x512",
-            type: "image/png",
+            type: "image/svg+xml",
         },
     ],
-    appName: "WorkAdventure",
-    shortAppName: "WA",
-    themeColor: "#1B2A41",
-    cardImage: "https://workadventu.re/images/general/logo-og.png",
+    appName: "Kaffekontoret",
+    shortAppName: "KK",
+    themeColor: "#1B3730",
+    cardImage: "/static/kaffekontoret/kaffekontoret-card.svg",
 };
 
 export class MetaTagsBuilder {

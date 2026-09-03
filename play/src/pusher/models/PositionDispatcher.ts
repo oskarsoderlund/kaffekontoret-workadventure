@@ -220,6 +220,17 @@ export class PositionDispatcher {
     }
 
     /**
+     * Checks proximity using the groups received from the authoritative back service.
+     * A pair can occur in more than one subscribed zone, so a match in any zone is sufficient.
+     */
+    public areUsersInSameGroup(firstUserId: number, secondUserId: number): boolean {
+        for (const zone of this.zones.values()) {
+            if (zone.areUsersInSameGroup(firstUserId, secondUserId)) return true;
+        }
+        return false;
+    }
+
+    /**
      * Route a message directly to the concerned zone.
      * The back now sends all zone messages wrapped in ZoneMessage with coordinates (x, y).
      * No need to loop over all zones: we route directly to the impacted zone.
