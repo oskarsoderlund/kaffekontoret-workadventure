@@ -1,6 +1,6 @@
 {
   "version": "2.1.0",
-  "mapUrl": "./map.tmj",
+  "mapUrl": "/map-storage/kaffekontoret/map.tmj",
   "areas": [],
   "entities": {},
   "entityCollections": [],

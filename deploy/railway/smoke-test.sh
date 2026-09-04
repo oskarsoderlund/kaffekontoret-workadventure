@@ -18,6 +18,6 @@ maps="$(curl --fail --silent --show-error "$pilot_url/map-storage/maps")"
 printf '%s\n' "$maps" | grep -q 'kaffekontoret/map.wam'
 
 wam="$(curl --fail --silent --show-error "$pilot_url/map-storage/kaffekontoret/map.wam")"
-printf '%s\n' "$wam" | grep -q '"mapUrl":"./map.tmj"'
+printf '%s\n' "$wam" | grep -Eq '"mapUrl"[[:space:]]*:[[:space:]]*"[^" ]*/map\.tmj"'
 
 printf '%s\n' "Kaffekontoret Railway smoke test passed: $pilot_url"

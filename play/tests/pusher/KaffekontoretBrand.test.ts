@@ -44,6 +44,18 @@ describe("Kaffekontoret branding", () => {
         });
     });
 
+    it("treats legacy global map-storage WAM links as rooms", async () => {
+        const details = await localAdmin.fetchMapDetails(
+            "https://office.example/_/global/kk-kontoret-edge-production.up.railway.app/map-storage/kaffekontoret/map.wam",
+        );
+
+        expect(details).toMatchObject({
+            mapUrl: undefined,
+            wamUrl: "/kaffekontoret/map.wam",
+            canEdit: false,
+        });
+    });
+
     it("keeps the source and license links in the shipped static page", () => {
         expect(sourcePage).toContain("github.com/oskarsoderlund/kaffekontoret-workadventure");
         expect(sourcePage).toContain("github.com/workadventure/workadventure");

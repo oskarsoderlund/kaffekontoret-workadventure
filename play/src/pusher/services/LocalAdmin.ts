@@ -294,7 +294,18 @@ class LocalAdmin implements AdminInterface {
                     subtitle: "",
                 });
             }
-            mapUrl = roomUrl.protocol + "//" + match[1];
+
+            // Older pilot links used WorkAdventure's global URL format with the
+            // public map-storage path embedded in it. Treat those links as WAM
+            // rooms, not as direct TMJ map URLs. Otherwise the client tries to
+            // parse the WAM JSON as a Tiled map and Phaser fails on orientation.
+            const legacyMapStorageMatch = /^[^/]+\/map-storage\/(.+\.wam)$/.exec(match[1]);
+            if (legacyMapStorageMatch) {
+                wamUrl = `${PUBLIC_MAP_STORAGE_URL}/${legacyMapStorageMatch[1]}`;
+                canEdit = ENABLE_MAP_EDITOR;
+            } else {
+                mapUrl = roomUrl.protocol + "//" + match[1];
+            }
         }
 
         const opidWokaNamePolicyCheck = OpidWokaNamePolicy.safeParse(OPID_WOKA_NAME_POLICY);
