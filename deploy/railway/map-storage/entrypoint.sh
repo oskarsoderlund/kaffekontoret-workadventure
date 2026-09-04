@@ -26,18 +26,9 @@ if [ -f "$storage_directory/kaffekontoret/map.tmj" ] && [ -f "/opt/seed/kaffekon
         chown node:node "$storage_directory/kaffekontoret/map.tmj" "$storage_directory/kaffekontoret/map.wam"
     fi
 
-    # Keep the generated pilot map in sync with non-destructive layout fixes.
+    # Keep generated pilot maps in sync with layout and room-music fixes.
     # A user-authored map normally changes the generated description, so it is left alone.
-    if sed -n '/"name"[[:space:]]*:[[:space:]]*"mapVersion"/,+2p' "$storage_directory/kaffekontoret/map.tmj" | grep -q '"value"[[:space:]]*:[[:space:]]*2' \
-        && grep -q 'fokusrum och fria byggzoner' "$storage_directory/kaffekontoret/map.tmj" \
-        && sed -n '/"name"[[:space:]]*:[[:space:]]*"mapVersion"/,+2p' "/opt/seed/kaffekontoret/map.tmj" | grep -q '"value"[[:space:]]*:[[:space:]]*3'; then
-        cp "/opt/seed/kaffekontoret/map.tmj" "$storage_directory/kaffekontoret/map.tmj"
-        cp "/opt/seed/kaffekontoret/map.wam" "$storage_directory/kaffekontoret/map.wam"
-        chown node:node "$storage_directory/kaffekontoret/map.tmj" "$storage_directory/kaffekontoret/map.wam"
-    fi
-
-    # Keep the generated pilot map in sync with the optional room-music zone.
-    if sed -n '/"name"[[:space:]]*:[[:space:]]*"mapVersion"/,+2p' "$storage_directory/kaffekontoret/map.tmj" | grep -q '"value"[[:space:]]*:[[:space:]]*3' \
+    if sed -n '/"name"[[:space:]]*:[[:space:]]*"mapVersion"/,+2p' "$storage_directory/kaffekontoret/map.tmj" | grep -Eq '"value"[[:space:]]*:[[:space:]]*[23]' \
         && grep -q 'fokusrum och fria byggzoner' "$storage_directory/kaffekontoret/map.tmj" \
         && sed -n '/"name"[[:space:]]*:[[:space:]]*"mapVersion"/,+2p' "/opt/seed/kaffekontoret/map.tmj" | grep -q '"value"[[:space:]]*:[[:space:]]*4'; then
         cp "/opt/seed/kaffekontoret/map.tmj" "$storage_directory/kaffekontoret/map.tmj"
