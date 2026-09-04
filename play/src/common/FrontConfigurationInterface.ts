@@ -13,6 +13,8 @@ export interface FrontConfigurationInterface {
     JITSI_PRIVATE_MODE: boolean;
     ENABLE_MAP_EDITOR: boolean;
     PUBLIC_MAP_STORAGE_PREFIX: string | undefined;
+    /** Optional direct audio URL used by the Kaffekontoret room-music zone. */
+    KAFFEKONTORET_ROOM_MUSIC_URL?: string;
     MAX_USERNAME_LENGTH: number;
     MAX_PER_GROUP: number;
     MAX_DISPLAYED_VIDEOS: number;

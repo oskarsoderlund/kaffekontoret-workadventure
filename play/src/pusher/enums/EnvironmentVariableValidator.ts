@@ -81,6 +81,11 @@ export const EnvironmentVariables = z.object({
         .optional()
         .transform(emptyStringToUndefined)
         .describe('The public URL to the map-storage server (for instance: "https://map-storage.example.com")'),
+    KAFFEKONTORET_ROOM_MUSIC_URL: AbsoluteOrRelativeUrl.optional()
+        .transform(emptyStringToUndefined)
+        .describe(
+            "Optional direct audio URL for the Kaffekontoret room-music zone. Use only audio you are licensed to play.",
+        ),
     INTERNAL_MAP_STORAGE_URL: AbsoluteOrRelativeUrl.optional()
         .transform(emptyStringToUndefined)
         .describe('The internal URL to the map-storage server (for instance: "https://map-storage:3000")'),

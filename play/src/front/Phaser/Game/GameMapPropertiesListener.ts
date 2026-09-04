@@ -13,7 +13,7 @@ import { ON_ACTION_TRIGGER_BUTTON, ON_ACTION_TRIGGER_ENTER, ON_ICON_TRIGGER_BUTT
 import type { CoWebsite } from "../../WebRtc/CoWebsite/CoWebsite";
 import { SimpleCoWebsite } from "../../WebRtc/CoWebsite/SimpleCoWebsite";
 import { bbbFactory } from "../../WebRtc/BBBFactory";
-import { JITSI_PRIVATE_MODE, JITSI_URL } from "../../Enum/EnvironmentVariable";
+import { JITSI_PRIVATE_MODE, JITSI_URL, KAFFEKONTORET_ROOM_MUSIC_URL } from "../../Enum/EnvironmentVariable";
 import { JitsiCoWebsite } from "../../WebRtc/CoWebsite/JitsiCoWebsite";
 import {
     audioManagerFileStore,
@@ -49,6 +49,8 @@ export type ITiledPlace = Omit<ITiledMapLayer | ITiledMapObject, "id"> & { id?: 
 const KAFFEKONTORET_FOCUS_ROOM = "kaffekontoretFocusRoom";
 const KAFFEKONTORET_FOCUS_ZOOM = "kaffekontoretFocusZoom";
 const DEFAULT_KAFFEKONTORET_FOCUS_ZOOM = 1.35;
+const KAFFEKONTORET_ROOM_MUSIC = "kaffekontoretRoomMusic";
+const KAFFEKONTORET_ROOM_MUSIC_VOLUME = "kaffekontoretRoomMusicVolume";
 
 export class GameMapPropertiesListener {
     private areasPropertiesListener: AreasPropertiesListener;
@@ -343,6 +345,32 @@ export class GameMapPropertiesListener {
             }
 
             this.scene.userInputManager.addSpaceEventListener(zoomIntoFocusRoom);
+        });
+
+        // The pilot's room-music layer is intentionally driven by an optional
+        // runtime URL. This keeps copyrighted audio out of the repository while
+        // allowing a licensed MP3/stream to start when a player enters the room.
+        this.gameMapFrontWrapper.onPropertyChange(KAFFEKONTORET_ROOM_MUSIC, (newValue, oldValue, allProps) => {
+            if (newValue === undefined) {
+                if (get(audioManagerFileStore) !== "") {
+                    audioManagerVolumeStore.stopSound(true);
+                    audioManagerFileStore.unloadAudio();
+                }
+                audioManagerVisibilityStore.set("hidden");
+                return;
+            }
+
+            if (!KAFFEKONTORET_ROOM_MUSIC_URL) {
+                audioManagerVisibilityStore.set("hidden");
+                return;
+            }
+
+            if (newValue !== oldValue) {
+                const configuredVolume = allProps.get(KAFFEKONTORET_ROOM_MUSIC_VOLUME);
+                const volume = typeof configuredVolume === "number" ? configuredVolume : 0.35;
+                audioManagerFileStore.playAudio(KAFFEKONTORET_ROOM_MUSIC_URL, this.scene.getMapUrl(), volume, true);
+                audioManagerVisibilityStore.set("visible");
+            }
         });
 
         this.gameMapFrontWrapper.onPropertyChange(GameMapProperties.BBB_MEETING, (newValue, oldValue, allProps) => {

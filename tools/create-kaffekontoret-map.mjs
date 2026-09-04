@@ -112,6 +112,31 @@ for (const layer of source.layers) {
   });
 }
 
+// Cut explicit doorways through the pod shells and the central office walls.
+// Without this, the decorative room boundaries look like separate cells even
+// though the surrounding floor is walkable.
+const clearMapRect = (layerName, x, y, rectWidth, rectHeight) => {
+  const layer = layers.find((candidate) => candidate.name === layerName);
+  if (!layer || layer.type !== "tilelayer") {
+    return;
+  }
+  for (let row = y; row < y + rectHeight; row += 1) {
+    for (let column = x; column < x + rectWidth; column += 1) {
+      if (row >= 0 && row < height && column >= 0 && column < width) {
+        layer.data[row * width + column] = 0;
+      }
+    }
+  }
+};
+
+const doorwayCenters = [18, 47, 75];
+for (const centerX of doorwayCenters) {
+  for (const layerName of ["walls", "collisions"]) {
+    clearMapRect(layerName, centerX - 1, 18, 3, 9);
+    clearMapRect(layerName, centerX - 1, 36, 3, 11);
+  }
+}
+
 const maxObjectId = Math.max(
   0,
   ...layers.flatMap((layer) =>
@@ -120,6 +145,19 @@ const maxObjectId = Math.max(
       : [],
   ),
 );
+
+const musicSourceLayer = layers.find((candidate) => candidate.name === "focusChillRoom");
+if (musicSourceLayer && musicSourceLayer.type === "tilelayer") {
+  layers.push({
+    ...musicSourceLayer,
+    id: source.nextlayerid + 1,
+    name: "roomMusic",
+    properties: [
+      { name: "kaffekontoretRoomMusic", type: "bool", value: true },
+      { name: "kaffekontoretRoomMusicVolume", type: "float", value: 0.35 },
+    ],
+  });
+}
 layers.push({
   draworder: "topdown",
   id: source.nextlayerid,
@@ -194,7 +232,7 @@ const map = {
     {
       name: "mapVersion",
       type: "int",
-      value: 2,
+      value: 4,
     },
     {
       name: "mapName",

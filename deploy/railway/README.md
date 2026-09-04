@@ -38,7 +38,9 @@ Set these edge variables to the corresponding Railway private hostnames:
 
 ## Pilot map seed
 
-On a fresh map-storage volume the image seeds the WorkAdventure pair `maps/kaffekontoret/map.wam` + `map.tmj` and the licensed starter assets. Existing maps are never overwritten, except for a one-time migration of the previous generated 63x35 pilot map (identified by its generated description) to the current 96x64 layout. Point `START_ROOM_URL` at `/_/global/<edge-host>/map-storage/kaffekontoret/map.wam` only after verifying the edge route and the seeded volume. The larger map keeps the central office, adds focus rooms where SPACE zooms the camera, and leaves broad walkable areas for collaborative building.
+On a fresh map-storage volume the image seeds the WorkAdventure pair `maps/kaffekontoret/map.wam` + `map.tmj` and the licensed starter assets. Existing maps are never overwritten, except for one-time migrations of the previous generated pilot versions (identified by their generated descriptions) to the current 96x64 layout. Point `START_ROOM_URL` at `/_/global/<edge-host>/map-storage/kaffekontoret/map.wam` only after verifying the edge route and the seeded volume. The larger map keeps the central office, adds focus rooms where SPACE zooms the camera, and leaves broad walkable areas for collaborative building with explicit doorways between pods.
+
+The small chill room is also marked as the pilot's room-music zone. Set the optional `KAFFEKONTORET_ROOM_MUSIC_URL` variable on `kk-wa-play` to a direct audio URL (MP3/stream) that Kaffekassan is licensed to play. The client loops it at 35% volume while a player is inside the zone and stops it on exit. Browsers may require one initial click/interaction before allowing sound.
 
 ## Guardrails
 
