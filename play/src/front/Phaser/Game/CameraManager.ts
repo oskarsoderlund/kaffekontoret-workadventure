@@ -451,7 +451,11 @@ export class CameraManager extends EventEmitter {
         this.zoomLocked = false;
     }
 
-    private restoreZoom(duration = 0): void {
+    public saveZoom(): void {
+        this.waScaleManager.saveZoom();
+    }
+
+    public restoreZoom(duration = 0): void {
         this.animateToZoomLevel(this.waScaleManager.getSaveZoom(), duration);
     }
 

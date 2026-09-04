@@ -16,4 +16,15 @@ if [ ! -f "$storage_directory/kaffekontoret/map.wam" ] && [ -d "/opt/seed/kaffek
     chown -R node:node "$storage_directory/kaffekontoret" "$storage_directory/assets"
 fi
 
+# Migrate only the previous generated Kaffekontoret pilot map. A map editor upload
+# is never overwritten: the old generated map is identified by its unique description.
+if [ -f "$storage_directory/kaffekontoret/map.tmj" ] && [ -f "/opt/seed/kaffekontoret/map.tmj" ]; then
+    if grep -q 'central kontorsyta och tomma expansionsvingar' "$storage_directory/kaffekontoret/map.tmj" \
+        && grep -q '"mapVersion"' "/opt/seed/kaffekontoret/map.tmj"; then
+        cp "/opt/seed/kaffekontoret/map.tmj" "$storage_directory/kaffekontoret/map.tmj"
+        cp "/opt/seed/kaffekontoret/map.wam" "$storage_directory/kaffekontoret/map.wam"
+        chown node:node "$storage_directory/kaffekontoret/map.tmj" "$storage_directory/kaffekontoret/map.wam"
+    fi
+fi
+
 exec gosu node npm run start

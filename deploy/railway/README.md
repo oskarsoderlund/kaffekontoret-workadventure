@@ -38,7 +38,7 @@ Set these edge variables to the corresponding Railway private hostnames:
 
 ## Pilot map seed
 
-On a fresh map-storage volume the image seeds the WorkAdventure pair `maps/kaffekontoret/map.wam` + `map.tmj` and the licensed starter assets. Existing maps are never overwritten. Point `START_ROOM_URL` at `/_/global/<edge-host>/map-storage/kaffekontoret/map.wam` only after verifying the edge route and the seeded volume. The generated map is 63x35: the existing central office is preserved in the middle and both outer wings are intentionally empty and walkable for collaborative building.
+On a fresh map-storage volume the image seeds the WorkAdventure pair `maps/kaffekontoret/map.wam` + `map.tmj` and the licensed starter assets. Existing maps are never overwritten, except for a one-time migration of the previous generated 63x35 pilot map (identified by its generated description) to the current 96x64 layout. Point `START_ROOM_URL` at `/_/global/<edge-host>/map-storage/kaffekontoret/map.wam` only after verifying the edge route and the seeded volume. The larger map keeps the central office, adds focus rooms where SPACE zooms the camera, and leaves broad walkable areas for collaborative building.
 
 ## Guardrails
 

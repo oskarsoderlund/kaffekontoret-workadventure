@@ -46,6 +46,10 @@ export interface OpenCoWebsite {
 // NOTE: We need to change id type to fit both ITiledMapObjects and UUID's from MapEditor
 export type ITiledPlace = Omit<ITiledMapLayer | ITiledMapObject, "id"> & { id?: string | number };
 
+const KAFFEKONTORET_FOCUS_ROOM = "kaffekontoretFocusRoom";
+const KAFFEKONTORET_FOCUS_ZOOM = "kaffekontoretFocusZoom";
+const DEFAULT_KAFFEKONTORET_FOCUS_ZOOM = 1.35;
+
 export class GameMapPropertiesListener {
     private areasPropertiesListener: AreasPropertiesListener;
 
@@ -307,6 +311,38 @@ export class GameMapPropertiesListener {
             } else {
                 openJitsiRoomFunction().catch((e) => console.error(e));
             }
+        });
+
+        // Kaffekontoret focus rooms use SPACE for a camera zoom instead of opening a meeting app.
+        // The zoom is deliberately opt-in and is restored when the player leaves the room.
+        let focusZoomed = false;
+        const zoomIntoFocusRoom = () => {
+            if (focusZoomed) {
+                return;
+            }
+
+            const configuredZoom = this.gameMapFrontWrapper.getCurrentProperties().get(KAFFEKONTORET_FOCUS_ZOOM);
+            const zoomFactor =
+                typeof configuredZoom === "number" && configuredZoom > 1
+                    ? configuredZoom
+                    : DEFAULT_KAFFEKONTORET_FOCUS_ZOOM;
+            const cameraManager = this.scene.getCameraManager();
+            cameraManager.saveZoom();
+            cameraManager.zoomByFactor(zoomFactor, 450);
+            focusZoomed = true;
+        };
+
+        this.gameMapFrontWrapper.onPropertyChange(KAFFEKONTORET_FOCUS_ROOM, (newValue) => {
+            if (newValue === undefined) {
+                this.scene.userInputManager.removeSpaceEventListener(zoomIntoFocusRoom);
+                if (focusZoomed) {
+                    this.scene.getCameraManager().restoreZoom(450);
+                    focusZoomed = false;
+                }
+                return;
+            }
+
+            this.scene.userInputManager.addSpaceEventListener(zoomIntoFocusRoom);
         });
 
         this.gameMapFrontWrapper.onPropertyChange(GameMapProperties.BBB_MEETING, (newValue, oldValue, allProps) => {
