@@ -198,7 +198,10 @@ export const FRONT_ENVIRONMENT_VARIABLES: FrontConfigurationInterface = {
     ICON_URL: env.ICON_URL,
     SKIP_RENDER_OPTIMIZATIONS: env.SKIP_RENDER_OPTIMIZATIONS,
     DISABLE_NOTIFICATIONS: env.DISABLE_NOTIFICATIONS,
-    JITSI_URL: env.JITSI_URL,
+    // Keep the pilot's built-in Jitsi zones usable even when Railway has no
+    // explicit JITSI_URL variable. Operators can still override this with a
+    // self-hosted/public Jitsi domain through the environment.
+    JITSI_URL: env.JITSI_URL || "meet.jit.si",
     JITSI_PRIVATE_MODE: env.JITSI_PRIVATE_MODE,
     ENABLE_MAP_EDITOR: env.ENABLE_MAP_EDITOR,
     PUBLIC_MAP_STORAGE_PREFIX: env.PUBLIC_MAP_STORAGE_URL ? new URL(env.PUBLIC_MAP_STORAGE_URL).pathname : undefined,
