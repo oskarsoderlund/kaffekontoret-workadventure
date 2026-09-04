@@ -15,7 +15,9 @@ export const UPLOADER_URL = env.UPLOADER_URL;
 export const ICON_URL = env.ICON_URL;
 export const SKIP_RENDER_OPTIMIZATIONS = env.SKIP_RENDER_OPTIMIZATIONS;
 export const DISABLE_NOTIFICATIONS = env.DISABLE_NOTIFICATIONS;
-export const JITSI_URL = env.JITSI_URL;
+// Keep map-defined Jitsi actions usable on the pilot even when the server
+// omits an optional JITSI_URL from its runtime environment payload.
+export const JITSI_URL = env.JITSI_URL || "meet.jit.si";
 export const JITSI_PRIVATE_MODE = env.JITSI_PRIVATE_MODE;
 export const ENABLE_MAP_EDITOR = env.ENABLE_MAP_EDITOR;
 export const MAX_USERNAME_LENGTH = env.MAX_USERNAME_LENGTH;
