@@ -132,7 +132,7 @@
         <IconMapEditor font-size="20" />
     </ActionBarButton>
 {/if}
-{#if $mapManagerActivated}
+{#if $mapManagerActivated && !gameManager.getCurrentGameScene().getMapUrl().split("?")[0].endsWith("/office/map.json")}
     <ActionBarButton
         onclick={toggleMapExplorerMode}
         label={$LL.mapEditor.sideBar.exploreTheRoom()}

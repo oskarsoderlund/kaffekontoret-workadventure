@@ -461,7 +461,9 @@
             {/if}
             <ExternalComponents zone="centeredPopup" />
 
-            <ExplorerMenu mapEditorRightOffset={mapEditorPanelVisible ? $mapEditorSideBarWidthStore : 0} />
+            {#if !gameManager.getCurrentGameScene().getMapUrl().split("?")[0].endsWith("/office/map.json")}
+                <ExplorerMenu mapEditorRightOffset={mapEditorPanelVisible ? $mapEditorSideBarWidthStore : 0} />
+            {/if}
         </section>
         <div class="">
             <!--<ActionBar />-->

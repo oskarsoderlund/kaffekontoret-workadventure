@@ -24,12 +24,7 @@
         startOfficePolling,
     } from "../Stores/OfficeBridgeStore";
     import { officeActivityPanelOpenStore, startOfficeActivityPolling } from "../Stores/OfficeActivityStore";
-    import {
-        OfficeGameClient,
-        officeGameState,
-        officeFlightOpen,
-        officeGameConnected,
-    } from "../Phaser/Entity/OfficeGameClient";
+    import { OfficeGameClient, officeGameState, officeFlightOpen } from "../Phaser/Entity/OfficeGameClient";
     import OfficeGameplay from "./OfficeGameplay.svelte";
     import OfficeMusic from "./OfficeMusic.svelte";
     import OfficeBackgroundMusic from "./OfficeBackgroundMusic.svelte";
@@ -51,6 +46,7 @@
         const bounds = scene.physics.world.bounds;
         waScaleManager.zoomModifier = waScaleManager.getTargetZoomModifierFor(bounds.width, bounds.height);
         overview(0);
+        scene.getCameraManager().setFollowMode();
         const agent = officeLocalToolsAvailable ? new OfficeAgent(scene) : undefined;
         client = new OfficeGameClient(scene);
         const stopSound = startOfficeSound();
@@ -164,15 +160,11 @@
         class="rounded-lg bg-cyan-300 px-3 py-2 text-sm font-bold text-slate-950"
         onclick={() => (gameOpen = !gameOpen)}>🚁 Spela</button
     >
-    <button
-        class="rounded-lg bg-white/10 px-3 py-2 text-sm"
-        aria-pressed={me?.enabled ?? false}
-        disabled={!$officeGameConnected || $officeFlightOpen || me?.hp === 0}
-        onclick={() => client?.toggleCombat()}>{me?.enabled ? "🎯 Kaos på" : "🎯 Kaos av"}</button
-    >
-    {#if me?.enabled && !$officeFlightOpen}
-        <button class="rounded-lg bg-rose-500 px-3 py-2 text-sm" onclick={() => client?.attack("kick")}
-            >Sparka (K)</button
+    {#if me && !$officeFlightOpen}
+        <button
+            class="rounded-lg bg-rose-500 px-3 py-2 text-sm"
+            disabled={me.hp === 0}
+            onclick={() => client?.attack("kick")}>Sparka (K)</button
         >
         <span class="text-xs" data-testid="office-health">♥ {me.hp} · {me.kills} poäng</span>
     {/if}
@@ -192,7 +184,6 @@
         <button aria-label="Zooma in" class="rounded-lg bg-white/10 px-3 py-2 text-sm" onclick={() => zoom(1.25)}
             >+</button
         >
-        <button class="rounded-lg bg-white/10 px-3 py-2 text-sm" onclick={() => overview()}>Överblick</button>
         <button class="rounded-lg bg-white/10 px-3 py-2 text-sm" onclick={changeAvatar}>Byt avatar</button>
         <button
             class="rounded-lg bg-white/10 px-3 py-2 text-sm"

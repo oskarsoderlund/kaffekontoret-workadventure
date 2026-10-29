@@ -1,4 +1,6 @@
-import { writable } from "svelte/store";
+import { get, writable } from "svelte/store";
+import { menuVisiblilityStore } from "../../Stores/MenuStore";
+import { modalVisibilityStore, showModalGlobalComminucationVisibilityStore } from "../../Stores/ModalStore";
 import { z } from "zod";
 import type { Subscription } from "rxjs";
 import type Phaser from "phaser";
@@ -32,7 +34,7 @@ const snapshot = z.object({
 });
 export type OfficeGameState = z.infer<typeof snapshot>;
 export const officeGameState = writable<OfficeGameState | null>(null);
-export const officeGameNotice = writable("Helikopteruppdrag och Kaosläge finns här.");
+export const officeGameNotice = writable("Mus: sikta/skjut · håll inne för fler skott · K: sparka.");
 export const officeFlightOpen = writable(false);
 export const officeGameConnected = writable(false);
 export class OfficeGameClient {
@@ -49,6 +51,11 @@ export class OfficeGameClient {
     private combatAngles = new Map<number, number>();
     private destroyed = false;
     private lastSync = 0;
+    private shooting = false;
+    private lastShotSent = 0;
+    private stopShooting = () => {
+        this.shooting = false;
+    };
     private overlayWasActive = false;
     private onUpdate = () => {
         const overlayActive =
@@ -61,6 +68,12 @@ export class OfficeGameClient {
             if (!actor) continue;
             actor.setAlpha(p.hp <= 0 || p.id === this.state?.helicopter.pilot ? 0.28 : 1);
             if (!p.enabled) continue;
+            if (p.hp <= 0) {
+                // A small stylized body and blood pool remain until authoritative respawn.
+                this.health.fillStyle(0x8c142e, 0.8).fillEllipse(actor.x, actor.y + 2, 31, 15);
+                this.health.fillStyle(0x231c29).fillRoundedRect(actor.x - 17, actor.y - 5, 29, 10, 4);
+                this.health.fillStyle(0xd6a47d).fillCircle(actor.x + 14, actor.y - 1, 5);
+            }
             if (p.hp > 0) {
                 const angle = p.id === this.id ? this.angle : (this.combatAngles.get(p.id) ?? Math.PI / 2);
                 const dx = Math.cos(angle),
@@ -81,18 +94,26 @@ export class OfficeGameClient {
         this.scene.markDirty();
     };
     private onAim = (pointer: Phaser.Input.Pointer) => {
+        if (!(pointer.event.target instanceof HTMLCanvasElement)) {
+            this.stopShooting();
+            return;
+        }
         this.angle = Math.atan2(
             pointer.worldY - this.scene.CurrentPlayer.y,
             pointer.worldX - this.scene.CurrentPlayer.x,
         );
     };
     private onShoot = (pointer: Phaser.Input.Pointer) => {
-        if (pointer.leftButtonDown()) {
+        if (pointer.leftButtonDown() && pointer.event.target instanceof HTMLCanvasElement) {
+            this.shooting = true;
+            this.lastShotSent = Date.now();
             this.onAim(pointer);
             this.attack("shoot");
         }
     };
     private typing(): boolean {
+        if (get(menuVisiblilityStore) || get(modalVisibilityStore) || get(showModalGlobalComminucationVisibilityStore))
+            return true;
         const el = document.activeElement;
         return el instanceof HTMLElement && (el.matches("input, textarea, select") || el.isContentEditable);
     }
@@ -113,6 +134,7 @@ export class OfficeGameClient {
         this.keys.delete(event.key.toLowerCase());
     };
     private onBlur = () => {
+        this.stopShooting();
         this.keys.clear();
         this.flightInput();
     };
@@ -175,9 +197,16 @@ export class OfficeGameClient {
         window.addEventListener("keydown", this.onDown);
         window.addEventListener("keyup", this.onUp);
         window.addEventListener("blur", this.onBlur);
+        window.addEventListener("pointerup", this.stopShooting);
+        window.addEventListener("pointercancel", this.stopShooting);
         this.send({ type: "sync" });
         this.timer = setInterval(() => {
             this.flightInput();
+            if (document.hidden) this.stopShooting();
+            if (this.shooting && Date.now() - this.lastShotSent >= 350) {
+                this.lastShotSent = Date.now();
+                this.attack("shoot");
+            }
             if (Date.now() - this.lastSync > 900) {
                 this.lastSync = Date.now();
                 this.send({ type: "sync" });
@@ -207,11 +236,6 @@ export class OfficeGameClient {
         this.keys.clear();
         this.send({ type: "flight", x: 0, y: 0 });
         this.send({ type: "land" });
-    }
-    toggleCombat(): void {
-        const me = this.state?.players.find((p) => p.id === this.id);
-        this.send({ type: "combat", enabled: !me?.enabled });
-        officeGameNotice.set("Kaos gäller bara spelare som själva har slagit på det. Mus: sikta/skjut · K: sparka.");
     }
     openFlight(): void {
         if (this.flight) return;
@@ -267,6 +291,7 @@ export class OfficeGameClient {
                 from: point,
                 to: point,
                 hit: z.number().nullable(),
+                killed: z.boolean().optional().default(false),
             })
             .safeParse(input);
         if (!parsed.success) return;
@@ -278,7 +303,30 @@ export class OfficeGameClient {
             graphics.lineStyle(6, 0xe2e8f0).lineBetween(e.from.x, e.from.y, e.to.x, e.to.y);
             graphics.lineStyle(3, 0x67e8f9).strokeCircle(e.to.x, e.to.y - 5, 14);
         }
-        graphics.fillStyle(e.hit !== null ? 0xff65a3 : 0xffd966).fillCircle(e.to.x, e.to.y - 9, 5);
+        graphics.fillStyle(e.hit !== null ? 0xd62945 : 0xffd966).fillCircle(e.to.x, e.to.y - 9, 5);
+        if (e.hit !== null) {
+            const blood = this.scene.add.graphics().setDepth(99998);
+            blood.fillStyle(0xa61932, 0.9).fillEllipse(e.to.x, e.to.y + 2, e.killed ? 30 : 17, e.killed ? 14 : 8);
+            this.scene.tweens.add({
+                targets: blood,
+                alpha: 0,
+                delay: e.killed ? 2200 : 650,
+                duration: 500,
+                onComplete: () => blood.destroy(),
+            });
+            for (let i = 0; i < 7; i++) {
+                const drop = this.scene.add.circle(e.to.x, e.to.y - 12, 1.5 + (i % 2), 0xd62945).setDepth(100000);
+                const angle = (i / 7) * Math.PI * 2;
+                this.scene.tweens.add({
+                    targets: drop,
+                    x: e.to.x + Math.cos(angle) * 21,
+                    y: e.to.y - 8 + Math.sin(angle) * 14,
+                    alpha: 0,
+                    duration: 450,
+                    onComplete: () => drop.destroy(),
+                });
+            }
+        }
         this.scene.tweens.add({ targets: graphics, alpha: 0, duration: 220, onComplete: () => graphics.destroy() });
         const distance = Math.hypot(e.from.x - this.scene.CurrentPlayer.x, e.from.y - this.scene.CurrentPlayer.y);
         if (distance < 650) {
@@ -299,6 +347,8 @@ export class OfficeGameClient {
         window.removeEventListener("keydown", this.onDown);
         window.removeEventListener("keyup", this.onUp);
         window.removeEventListener("blur", this.onBlur);
+        window.removeEventListener("pointerup", this.stopShooting);
+        window.removeEventListener("pointercancel", this.stopShooting);
         this.health.destroy();
         officeGameConnected.set(false);
     }
