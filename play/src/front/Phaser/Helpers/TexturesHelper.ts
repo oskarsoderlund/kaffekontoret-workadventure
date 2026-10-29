@@ -18,7 +18,9 @@ export class TexturesHelper {
             // TODO: send a correct PNG????
             return "";
         }
-        const rt = scene.make.renderTexture({}, false);
+        const width = Math.max(32, ...sprites.map(({ sprite }) => Math.ceil(sprite.displayWidth)));
+        const height = Math.max(32, ...sprites.map(({ sprite }) => Math.ceil(sprite.displayHeight)));
+        const rt = scene.make.renderTexture({ width, height }, false);
         try {
             for (const { sprite, frame } of sprites) {
                 if (frame) {

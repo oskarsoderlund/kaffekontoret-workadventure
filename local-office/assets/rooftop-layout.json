@@ -1,0 +1,863 @@
+{
+  "referenceSize": [
+    1280,
+    720
+  ],
+  "tileSize": 16,
+  "surfaces": [
+    [
+      414,
+      286,
+      878,
+      467
+    ],
+    [
+      365,
+      148,
+      411,
+      618
+    ],
+    [
+      42,
+      272,
+      370,
+      380
+    ],
+    [
+      32,
+      401,
+      387,
+      493
+    ],
+    [
+      34,
+      483,
+      74,
+      606
+    ],
+    [
+      45,
+      596,
+      391,
+      615
+    ],
+    [
+      383,
+      475,
+      423,
+      615
+    ],
+    [
+      350,
+      360,
+      435,
+      442
+    ],
+    [
+      415,
+      145,
+      797,
+      230
+    ],
+    [
+      617,
+      219,
+      665,
+      298
+    ],
+    [
+      790,
+      201,
+      832,
+      241
+    ],
+    [
+      809,
+      130,
+      1176,
+      243
+    ],
+    [
+      879,
+      235,
+      923,
+      343
+    ],
+    [
+      865,
+      332,
+      971,
+      457
+    ],
+    [
+      989,
+      339,
+      1226,
+      463
+    ],
+    [
+      945,
+      393,
+      1010,
+      434
+    ],
+    [
+      958,
+      502,
+      1214,
+      606
+    ],
+    [
+      882,
+      446,
+      929,
+      603
+    ],
+    [
+      913,
+      559,
+      990,
+      611
+    ],
+    [
+      609,
+      449,
+      672,
+      605
+    ],
+    [
+      553,
+      553,
+      731,
+      614
+    ],
+    [
+      595,
+      609,
+      689,
+      717
+    ],
+    [
+      404,
+      574,
+      559,
+      614
+    ],
+    [
+      724,
+      570,
+      921,
+      611
+    ],
+    [
+      354,
+      57,
+      395,
+      238
+    ],
+    [
+      315,
+      158,
+      372,
+      213
+    ],
+    [
+      47,
+      49,
+      335,
+      213
+    ],
+    [
+      391,
+      193,
+      428,
+      230
+    ]
+  ],
+  "obstacles": [
+    {
+      "name": "helikopter",
+      "box": [
+        139,
+        96,
+        247,
+        153
+      ]
+    },
+    {
+      "name": "receptionsdisk",
+      "box": [
+        574,
+        148,
+        712,
+        181
+      ]
+    },
+    {
+      "name": "receptionssoffa väst",
+      "box": [
+        509,
+        187,
+        535,
+        220
+      ]
+    },
+    {
+      "name": "receptionssoffa öst",
+      "box": [
+        733,
+        186,
+        761,
+        220
+      ]
+    },
+    {
+      "name": "receptionspalm väst",
+      "box": [
+        485,
+        169,
+        504,
+        209
+      ]
+    },
+    {
+      "name": "receptionspalm öst",
+      "box": [
+        775,
+        160,
+        796,
+        211
+      ]
+    },
+    {
+      "name": "övre skrivbordsö",
+      "box": [
+        876,
+        165,
+        1037,
+        202
+      ]
+    },
+    {
+      "name": "övre skrivbord",
+      "box": [
+        1054,
+        168,
+        1112,
+        204
+      ]
+    },
+    {
+      "name": "whiteboard",
+      "box": [
+        1086,
+        135,
+        1134,
+        166
+      ]
+    },
+    {
+      "name": "skrivbordsö nordväst",
+      "box": [
+        465,
+        309,
+        591,
+        341
+      ]
+    },
+    {
+      "name": "skrivbordsö nordöst",
+      "box": [
+        696,
+        309,
+        797,
+        340
+      ]
+    },
+    {
+      "name": "skrivbordsö sydväst",
+      "box": [
+        464,
+        393,
+        592,
+        429
+      ]
+    },
+    {
+      "name": "skrivbord sydöst",
+      "box": [
+        697,
+        392,
+        757,
+        428
+      ]
+    },
+    {
+      "name": "mötesbord",
+      "box": [
+        807,
+        392,
+        854,
+        436
+      ]
+    },
+    {
+      "name": "växt nordväst",
+      "box": [
+        438,
+        319,
+        456,
+        352
+      ]
+    },
+    {
+      "name": "växt nordcentralt",
+      "box": [
+        601,
+        320,
+        619,
+        354
+      ]
+    },
+    {
+      "name": "växt nordöst",
+      "box": [
+        658,
+        320,
+        680,
+        355
+      ]
+    },
+    {
+      "name": "växt vid whiteboard",
+      "box": [
+        854,
+        329,
+        875,
+        369
+      ]
+    },
+    {
+      "name": "växt sydväst",
+      "box": [
+        437,
+        401,
+        456,
+        446
+      ]
+    },
+    {
+      "name": "växt sydcentralt",
+      "box": [
+        601,
+        406,
+        620,
+        445
+      ]
+    },
+    {
+      "name": "växt sydöst",
+      "box": [
+        660,
+        405,
+        680,
+        447
+      ]
+    },
+    {
+      "name": "växt möteshörna",
+      "box": [
+        872,
+        406,
+        891,
+        445
+      ]
+    },
+    {
+      "name": "bardisk",
+      "box": [
+        65,
+        268,
+        224,
+        301
+      ]
+    },
+    {
+      "name": "barstolar",
+      "box": [
+        75,
+        301,
+        218,
+        313
+      ]
+    },
+    {
+      "name": "barsoffa väst",
+      "box": [
+        96,
+        336,
+        132,
+        373
+      ]
+    },
+    {
+      "name": "barsoffa mitt",
+      "box": [
+        173,
+        337,
+        208,
+        374
+      ]
+    },
+    {
+      "name": "barbord väst",
+      "box": [
+        130,
+        350,
+        165,
+        376
+      ]
+    },
+    {
+      "name": "barsoffa öst",
+      "box": [
+        276,
+        337,
+        296,
+        374
+      ]
+    },
+    {
+      "name": "barsoffa öst ytter",
+      "box": [
+        326,
+        335,
+        351,
+        373
+      ]
+    },
+    {
+      "name": "barbord öst",
+      "box": [
+        295,
+        349,
+        324,
+        376
+      ]
+    },
+    {
+      "name": "solstol väst",
+      "box": [
+        45,
+        447,
+        91,
+        478
+      ]
+    },
+    {
+      "name": "solstol mitt",
+      "box": [
+        144,
+        433,
+        176,
+        476
+      ]
+    },
+    {
+      "name": "solstol öst",
+      "box": [
+        220,
+        432,
+        249,
+        476
+      ]
+    },
+    {
+      "name": "solstol ytter",
+      "box": [
+        309,
+        430,
+        340,
+        476
+      ]
+    },
+    {
+      "name": "pool och jacuzzi",
+      "box": [
+        78,
+        494,
+        382,
+        595
+      ]
+    },
+    {
+      "name": "jacuzzi kant",
+      "box": [
+        69,
+        525,
+        184,
+        596
+      ]
+    },
+    {
+      "name": "arkadmaskiner",
+      "box": [
+        997,
+        333,
+        1146,
+        377
+      ]
+    },
+    {
+      "name": "biljardbord",
+      "box": [
+        1043,
+        399,
+        1129,
+        447
+      ]
+    },
+    {
+      "name": "spelsoffa",
+      "box": [
+        1170,
+        346,
+        1218,
+        410
+      ]
+    },
+    {
+      "name": "eldstad",
+      "box": [
+        1056,
+        549,
+        1113,
+        588
+      ]
+    },
+    {
+      "name": "eldstad soffgrupp väst",
+      "box": [
+        986,
+        537,
+        1030,
+        581
+      ]
+    },
+    {
+      "name": "eldstad soffgrupp öst",
+      "box": [
+        1143,
+        537,
+        1190,
+        581
+      ]
+    },
+    {
+      "name": "entrépalm väst",
+      "box": [
+        552,
+        531,
+        574,
+        571
+      ]
+    },
+    {
+      "name": "entrépalm öst",
+      "box": [
+        707,
+        530,
+        731,
+        573
+      ]
+    },
+    {
+      "name": "nordväst stol bak 1",
+      "box": [
+        481,
+        297,
+        500,
+        314
+      ]
+    },
+    {
+      "name": "nordväst stol bak 2",
+      "box": [
+        552,
+        297,
+        572,
+        314
+      ]
+    },
+    {
+      "name": "nordväst stol fram 1",
+      "box": [
+        480,
+        342,
+        500,
+        361
+      ]
+    },
+    {
+      "name": "nordväst stol fram 2",
+      "box": [
+        551,
+        342,
+        572,
+        361
+      ]
+    },
+    {
+      "name": "nordöst stol bak 1",
+      "box": [
+        711,
+        297,
+        732,
+        315
+      ]
+    },
+    {
+      "name": "nordöst stol bak 2",
+      "box": [
+        772,
+        297,
+        792,
+        315
+      ]
+    },
+    {
+      "name": "nordöst stol fram 1",
+      "box": [
+        711,
+        340,
+        733,
+        360
+      ]
+    },
+    {
+      "name": "nordöst stol fram 2",
+      "box": [
+        772,
+        340,
+        793,
+        360
+      ]
+    },
+    {
+      "name": "sydväst stol bak 1",
+      "box": [
+        481,
+        379,
+        500,
+        395
+      ]
+    },
+    {
+      "name": "sydväst stol bak 2",
+      "box": [
+        550,
+        379,
+        570,
+        395
+      ]
+    },
+    {
+      "name": "sydväst stol fram 1",
+      "box": [
+        480,
+        427,
+        501,
+        447
+      ]
+    },
+    {
+      "name": "sydväst stol fram 2",
+      "box": [
+        551,
+        427,
+        573,
+        447
+      ]
+    },
+    {
+      "name": "sydöst stol bak",
+      "box": [
+        713,
+        380,
+        735,
+        397
+      ]
+    },
+    {
+      "name": "sydöst stol fram",
+      "box": [
+        712,
+        427,
+        735,
+        447
+      ]
+    },
+    {
+      "name": "mötesstol väst",
+      "box": [
+        785,
+        404,
+        807,
+        437
+      ]
+    },
+    {
+      "name": "mötesstol öst",
+      "box": [
+        851,
+        404,
+        873,
+        437
+      ]
+    },
+    {
+      "name": "parasollfot väst",
+      "box": [
+        84,
+        439,
+        99,
+        453
+      ]
+    },
+    {
+      "name": "parasollfot mitt",
+      "box": [
+        184,
+        436,
+        198,
+        451
+      ]
+    },
+    {
+      "name": "poolbord väst",
+      "box": [
+        72,
+        444,
+        87,
+        459
+      ]
+    },
+    {
+      "name": "poolbord mitt",
+      "box": [
+        275,
+        442,
+        289,
+        457
+      ]
+    },
+    {
+      "name": "växt barpassage",
+      "box": [
+        314,
+        300,
+        335,
+        324
+      ]
+    },
+    {
+      "name": "receptionsbord växt",
+      "box": [
+        418,
+        197,
+        433,
+        219
+      ]
+    }
+  ],
+  "spawn": [
+    640,
+    375
+  ],
+  "agent": [
+    640,
+    201
+  ],
+  "destinations": [
+    {
+      "id": "studio",
+      "name": "Arbetsplatser",
+      "point": [
+        640,
+        375
+      ]
+    },
+    {
+      "id": "reception",
+      "name": "Reception / Codex",
+      "point": [
+        674,
+        215
+      ]
+    },
+    {
+      "id": "helipad",
+      "name": "Helikopterplatta",
+      "point": [
+        277,
+        180
+      ]
+    },
+    {
+      "id": "bar",
+      "name": "Neonbar",
+      "point": [
+        243,
+        325
+      ]
+    },
+    {
+      "id": "pool",
+      "name": "Poolterrass",
+      "point": [
+        365,
+        483
+      ]
+    },
+    {
+      "id": "office",
+      "name": "Övre kontor",
+      "point": [
+        946,
+        221
+      ]
+    },
+    {
+      "id": "arcade",
+      "name": "Spelrum",
+      "point": [
+        1149,
+        438
+      ]
+    },
+    {
+      "id": "firepit",
+      "name": "Eldstadslounge",
+      "point": [
+        1086,
+        600
+      ]
+    },
+    {
+      "id": "entrance",
+      "name": "Huvudentré",
+      "point": [
+        640,
+        584
+      ]
+    },
+    {
+      "id": "dock",
+      "name": "Brygga",
+      "point": [
+        640,
+        680
+      ]
+    }
+  ]
+}

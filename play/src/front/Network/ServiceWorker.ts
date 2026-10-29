@@ -1,7 +1,8 @@
-import { NODE_ENV } from "../Enum/EnvironmentVariable";
+import { BYPASS_PWA, NODE_ENV } from "../Enum/EnvironmentVariable";
 
 export class _ServiceWorker {
     constructor() {
+        if (BYPASS_PWA) return;
         if ("serviceWorker" in navigator) {
             if (navigator.storage && navigator.storage.persist) {
                 navigator.storage

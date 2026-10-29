@@ -5,3 +5,12 @@
 /libs/messages/src/ts-proto-generated/**
 /play/src/messages/generated/**
 /back/src/messages/generated/**
+
+# Local evidence and owner-only tools must never enter release build contexts.
+.git
+qa-reports
+local-office
+**/.env
+**/.env.*
+**/.tls
+play/public/office/source.zip*

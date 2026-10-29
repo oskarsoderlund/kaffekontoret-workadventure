@@ -1,3 +1,4 @@
+import { Scenes } from "phaser";
 import type { Unsubscriber } from "svelte/store";
 import { get } from "svelte/store";
 import type { CancelablePromise } from "cancelable-promise";
@@ -21,6 +22,9 @@ export const requestEmoteEventName = "requestEmote";
 export class Player extends Character {
     private readonly unsubscribeVisibilityStore: Unsubscriber;
     private isMoving = false;
+    private readonly emitStoppedPosition = (): void => {
+        this.emit(hasMovedEventName, { moving: false, direction: this._lastDirection, x: this.x, y: this.y });
+    };
 
     constructor(
         Scene: GameScene,
@@ -163,7 +167,8 @@ export class Player extends Character {
                 this.isMoving = false;
             }
             this.stop();
-            emit();
+            // Arcade applies the final body displacement in POST_UPDATE. Publish that settled position.
+            this.scene.events.once(Scenes.Events.POST_UPDATE, this.emitStoppedPosition);
         }
 
         // Update state
@@ -265,6 +270,7 @@ export class Player extends Character {
     }
 
     destroy(): void {
+        this.scene.events.off(Scenes.Events.POST_UPDATE, this.emitStoppedPosition);
         this.unsubscribeVisibilityStore();
         super.destroy();
     }

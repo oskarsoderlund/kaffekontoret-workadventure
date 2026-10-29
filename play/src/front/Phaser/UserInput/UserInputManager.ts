@@ -35,7 +35,13 @@ export enum UserInputEvent {
 
 // The reason why the controls are disabled
 // The MessageEventSource type means the controls where disabled by the scripting API in the related iframe
-type DisableControlsReason = "store" | "explorerTool" | "errorScreen" | MessageEventSource;
+type DisableControlsReason =
+    | "store"
+    | "explorerTool"
+    | "errorScreen"
+    | "officeFlight"
+    | "officeKnockout"
+    | MessageEventSource;
 
 export interface Shortcut {
     key: string;
@@ -77,7 +83,8 @@ export class UserInputManager {
     private keysCode!: UserInputManagerDatum[];
     private scene: Phaser.Scene;
     private isInputDisabled: boolean;
-    private isRightClickDisabled: boolean;
+    private readonly rightClickDisableReasons = new Set<string>();
+    public officeCombatActive = false;
 
     private joystick?: MobileJoystick;
     private joystickEvents = new ActiveEventList();
@@ -94,7 +101,6 @@ export class UserInputManager {
         this.userInputHandler = userInputHandler;
 
         this.isInputDisabled = false;
-        this.isRightClickDisabled = false;
         this.initKeyBoardEvent();
         this.bindInputEventHandlers();
         if (touchScreenManager.supportTouchScreen) {
@@ -264,20 +270,28 @@ export class UserInputManager {
         return this.keysCode;
     }
 
+    get officeGameConsumesClicks(): boolean {
+        return (
+            this.officeCombatActive ||
+            this.disableControlsReasons.has("officeFlight") ||
+            this.disableControlsReasons.has("officeKnockout")
+        );
+    }
+
     get isControlsEnabled() {
         return !this.isInputDisabled;
     }
 
-    disableRightClick() {
-        this.isRightClickDisabled = true;
+    disableRightClick(reason = "default") {
+        this.rightClickDisableReasons.add(reason);
     }
 
-    restoreRightClick() {
-        this.isRightClickDisabled = false;
+    restoreRightClick(reason = "default") {
+        this.rightClickDisableReasons.delete(reason);
     }
 
     get isRightClickEnabled() {
-        return !this.isRightClickDisabled;
+        return this.rightClickDisableReasons.size === 0;
     }
 
     getEventListForGameTick(): ActiveEventList {
@@ -378,7 +392,7 @@ export class UserInputManager {
 
             // Let's only display the joystick if there is one finger on the screen
             if (pointer.event instanceof TouchEvent && pointer.event.touches.length === 1) {
-                this.joystick?.showAt(pointer.x, pointer.y);
+                this.joystick?.showAt(pointer);
             } else {
                 this.joystick?.hide(30_000);
             }

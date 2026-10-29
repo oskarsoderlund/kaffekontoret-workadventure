@@ -55,7 +55,9 @@ export class PathfindingManager {
         const path = result.path;
         if (path.length > 1) {
             // Replace the first element of the path with the actual start position
-            path[0] = { x: start.x, y: start.y + this.tileDimensions.height * 0.5 }; // We need to add half of the tile height to get the bottom center of the tile as long as the player origin is centered
+            // Character.adjustPathToColliderBounds removes the collider's anchor offset.
+            // Use that same offset here; half a tile only matches it on 32 px maps.
+            path[0] = { x: start.x, y: start.y + CHARACTER_BODY_HEIGHT / 2 + CHARACTER_BODY_OFFSET_Y };
             if (result.isExactTarget) {
                 // Let's put back the exact position.
                 // Actually, we are not targeting always the absolutely exact pixel-perfect position.

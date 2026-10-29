@@ -55,12 +55,7 @@ export class MobileJoystick extends VirtualJoystick {
         this.joystickThumb = joystickThumb;
 
         // Disable the joystick by default
-        this.enable = false;
-
-        // Show the joystick at the bottom middle of the screen
-        const { width, height } = this.joystickScene.game.canvas;
-        this.x = width / 2;
-        this.y = height * 0.8;
+        this.visible = false;
 
         // Add opacity
         this.joystickBase.setAlpha(0.3);
@@ -70,16 +65,19 @@ export class MobileJoystick extends VirtualJoystick {
         this.joystickScene.scale.on(Phaser.Scale.Events.RESIZE, this.resizeCallback);
     }
 
-    public showAt(x: number, y: number): void {
-        // Show the joystick at the given position
-        this.x = x;
-        this.y = y;
-
-        // The joystick is used by the player
-        this.enable = true;
+    public showAt(pointer: Phaser.Input.Pointer): void {
+        const camera = this.joystickScene.cameras.main;
+        const point = camera.getWorldPoint(pointer.x, pointer.y);
+        // The base has scrollFactor 0 but still uses the camera's zoom transform.
+        this.x = point.x - camera.scrollX;
+        this.y = point.y - camera.scrollY;
+        this.resizeImages();
         this.visible = true;
 
         if (this.setimeout) clearTimeout(this.setimeout);
+        // The base was hidden/off-screen during Phaser's hit test for this first touch.
+        // Forward that same pointer to Rex so dragging works without a second touch.
+        this.joystickBase.emit(Phaser.Input.Events.POINTER_DOWN, pointer);
     }
 
     public hide(delay: number): void {
@@ -100,7 +98,10 @@ export class MobileJoystick extends VirtualJoystick {
     }
 
     public resize() {
-        // scale the joystick to the current zoom level
+        this.resizeImages();
+    }
+
+    private resizeImages(): void {
         this.joystickBase.setDisplaySize(
             this.getDisplaySizeByElement(baseSize),
             this.getDisplaySizeByElement(baseSize),
@@ -109,20 +110,17 @@ export class MobileJoystick extends VirtualJoystick {
             this.getDisplaySizeByElement(thumbSize),
             this.getDisplaySizeByElement(thumbSize),
         );
-
-        // TODO: change it to apply the good ratio of the canvas
-        // Show the joystick at the bottom middle of the screen
-        const { width, height } = this.joystickScene.game.canvas;
-        this.x = width / 2;
-        this.y = height * 0.8;
     }
 
     private getDisplaySizeByElement(element: number): number {
-        return (element / (waScaleManager.zoomModifier * waScaleManager.uiScalingFactor)) * window.devicePixelRatio;
+        const canvasWidth = this.joystickScene.game.canvas.getBoundingClientRect().width;
+        const cameraZoom = this.joystickScene.cameras.main.zoom;
+        return (element * this.joystickScene.scale.width) / (canvasWidth * cameraZoom);
     }
 
     public destroy() {
         this.joystickScene.scale.removeListener(Phaser.Scale.Events.RESIZE, this.resizeCallback);
+        if (this.setimeout) clearTimeout(this.setimeout);
         super.destroy();
         this.destroyed = true;
     }

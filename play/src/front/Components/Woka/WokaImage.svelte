@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
+    import { getPlayerTextureFrameConfig, isOfficeCrewTexture } from "../../Phaser/Entity/OfficeAvatarTexture";
     import type { WokaData, WokaTexture } from "./WokaTypes";
 
     interface Props {
@@ -57,9 +58,22 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (const part of bodyPartOrder) {
             const img = images[part];
-            ctx.imageSmoothingEnabled = false;
+            const textureId = selectedTextures[part] || "";
+            const { frameWidth, frameHeight } = getPlayerTextureFrameConfig(textureId);
+            ctx.imageSmoothingEnabled = isOfficeCrewTexture(textureId);
             if (img && img.complete) {
-                ctx.drawImage(img, frame * 32, direction * 32, 32, 32, 0, 0, canvasSize, canvasSize);
+                const previewFrame = isOfficeCrewTexture(textureId) ? 1 : frame;
+                ctx.drawImage(
+                    img,
+                    previewFrame * frameWidth,
+                    direction * frameHeight,
+                    frameWidth,
+                    frameHeight,
+                    0,
+                    0,
+                    canvasSize,
+                    canvasSize,
+                );
             }
         }
     }

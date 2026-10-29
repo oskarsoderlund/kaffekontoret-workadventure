@@ -25,6 +25,9 @@ RUN npm ci --omit=dev --workspace workadventureback
 COPY libs ./libs
 COPY --from=proto-builder /usr/libs/messages/src ./libs/messages/src
 COPY back ./back
+# Server-authoritative office gameplay uses the same collision data as the client.
+COPY play/public/office/navigation.json ./back/office-navigation.json
+ENV OFFICE_NAVIGATION_FILE=/usr/src/back/office-navigation.json
 COPY --from=proto-builder /usr/src/generated ./back/src/Messages/generated
 # useful for profiling (with --prof) because it write a file in current directory
 RUN chown -R node:node ./back
