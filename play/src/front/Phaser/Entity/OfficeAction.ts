@@ -16,7 +16,9 @@ function readSoundPreference(): boolean {
 }
 let soundEnabled = readSoundPreference();
 export const officeSoundEnabled = writable(soundEnabled);
-export const officeActionNotice = writable("WASD / pilar · B: slumpat ljud · K: spark i Kaos · Shift springer");
+export const officeActionNotice = writable(
+    "WASD / pilar · B: slumpat ljud · K: sparka · Mus: sikta/skjut · Shift springer",
+);
 let audio: AudioContext | undefined;
 let volume: GainNode | undefined;
 

@@ -119,7 +119,7 @@ export class OfficeGame {
                 name: user.name,
                 ...user.getPosition(),
                 hp: 100,
-                enabled: false,
+                enabled: true,
                 kills: 0,
                 deaths: 0,
                 protectedUntil: 0,
@@ -138,15 +138,8 @@ export class OfficeGame {
             this.publish([p.id]);
             return;
         }
-        if (input.type === "combat" && "enabled" in input && typeof input.enabled === "boolean") {
-            if (p.hp <= 0 || this.helicopter.pilot === p.id) return;
-            if (input.enabled === p.enabled) return;
-            p.enabled = input.enabled;
-            // Re-entering cannot immediately attack or refresh protection while already enabled.
-            p.protectedUntil = now + 1800;
-            this.publish();
-            return;
-        }
+        // Older clients may still send the removed opt-in toggle. It cannot grant immunity.
+        if (input.type === "combat") return;
         if (input.type === "launch") {
             if (this.helicopter.pilot !== null) {
                 this.tell(p.id, "Helikoptern är upptagen. Du kan följa flygningen som åskådare.");
@@ -156,7 +149,6 @@ export class OfficeGame {
                 this.tell(p.id, "Gå närmare helikopterplattan först.");
                 return;
             }
-            p.enabled = false;
             this.helicopter = {
                 ...this.parked(),
                 pilot: p.id,
@@ -260,7 +252,14 @@ export class OfficeGame {
             }
             this.send(
                 "office.game.effect.v1",
-                { type: input.type, actor: p.id, from: { x: p.x, y: p.y }, to: end, hit: hit?.id ?? null },
+                {
+                    type: input.type,
+                    actor: p.id,
+                    from: { x: p.x, y: p.y },
+                    to: end,
+                    hit: hit?.id ?? null,
+                    killed: hit?.hp === 0,
+                },
                 [],
             );
             this.publish();

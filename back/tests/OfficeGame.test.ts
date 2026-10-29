@@ -45,19 +45,49 @@ describe("Office gameplay authority", () => {
         game.command(p, { type: "sync" });
         return p;
     };
-    it("requires registration and explicit combat participation", () => {
+    it("registers fighters as active and allows immediate hits without an opt-in", () => {
         const a = join(1),
             b = join(2, 870);
+        expect(current().players.every((p) => p.enabled)).toBe(true);
         game.command(a, { type: "shoot", angle: 0 });
-        expect(current().players.find((p: { id: number }) => p.id === 2)?.hp).toBe(100);
-        game.command(a, { type: "combat", enabled: true });
-        vi.advanceTimersByTime(2000);
+        expect(current().players[1].hp).toBe(75);
+        game.command(b, { type: "shoot", angle: Math.PI });
+        expect(current().players[0].hp).toBe(75);
+    });
+    it("ignores legacy opt-out commands and never grants immunity through a toggle", () => {
+        const a = join(1),
+            b = join(2, 870);
+        game.command(a, { type: "combat", enabled: false });
+        game.command(b, { type: "combat", enabled: false });
+        expect(current().players.every((p) => p.enabled)).toBe(true);
         game.command(a, { type: "shoot", angle: 0 });
-        expect(current().players.find((p: { id: number }) => p.id === 2)?.hp).toBe(100);
-        game.command(b, { type: "combat", enabled: true });
-        vi.advanceTimersByTime(2000);
-        game.command(a, { type: "shoot", angle: 0 });
-        expect(current().players.find((p: { id: number }) => p.id === 2)?.hp).toBe(75);
+        expect(current().players[1].hp).toBe(75);
+        expect(current().players[1].protectedUntil).toBe(0);
+    });
+    it("rejects unregistered attackers and emits an authoritative death effect on the fourth hit", () => {
+        const a = join(1);
+        join(2, 870);
+        game.command(user(99), { type: "shoot", angle: 0 });
+        expect(current().players[1].hp).toBe(100);
+        for (let i = 0; i < 4; i++) {
+            game.command(a, { type: "shoot", angle: 0 });
+            vi.advanceTimersByTime(350);
+        }
+        expect(events.filter((e) => e.name === "office.game.effect.v1").at(-1)?.data).toMatchObject({
+            hit: 2,
+            killed: true,
+        });
+    });
+    it("keeps pilots safe during flight and automatically restores ground combat on return", () => {
+        const a = join(1, 360, 232),
+            b = join(2, 400, 232);
+        game.command(a, { type: "launch" });
+        game.command(b, { type: "shoot", angle: Math.PI });
+        expect(current().players[0].hp).toBe(100);
+        game.command(a, { type: "abort" });
+        vi.advanceTimersByTime(400);
+        game.command(b, { type: "shoot", angle: Math.PI });
+        expect(current().players[0].hp).toBe(75);
     });
     it("enforces shot cooldown, knockout, score and protected respawn", () => {
         const a = join(1),

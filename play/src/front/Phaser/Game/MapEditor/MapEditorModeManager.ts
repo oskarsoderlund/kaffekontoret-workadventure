@@ -12,6 +12,7 @@ import type { GameScene } from "../GameScene";
 import {
     mapEditorAskToClaimPersonalAreaStore,
     mapEditorModeStore,
+    mapExplorationModeStore,
     mapEditorSelectedToolStore,
 } from "../../../Stores/MapEditorStore";
 import { mapEditorActivated, mapEditorActivatedForThematics } from "../../../Stores/MenuStore";
@@ -410,6 +411,14 @@ export class MapEditorModeManager {
     }
 
     public equipTool(tool?: EditorToolName): void {
+        if (
+            tool === EditorToolName.ExploreTheRoom &&
+            this.scene.getMapUrl().split("?")[0].endsWith("/office/map.json")
+        ) {
+            mapExplorationModeStore.set(false);
+            mapEditorModeStore.switchMode(false);
+            return;
+        }
         if (this.activeTool === tool) {
             return;
         }

@@ -65,10 +65,10 @@
             <p aria-live="polite" class="text-sm text-yellow-200">{$officeGameNotice}</p>
         {/if}
         <p class="text-sm text-emerald-200">{$officeGameState?.result ?? "Ansluter till spelservern…"}</p>
-        <h3 class="mt-4 text-sm font-bold">Kaos med kompisar</h3>
+        <h3 class="mt-4 text-sm font-bold">Skjuta och sparka</h3>
         <p class="text-sm">
-            Slå på Kaos hos båda spelarna. Sikta med musen, klicka för pistol och tryck K för spark. 100 hälsa, 25 skada
-            per träff. Du återkommer efter 2,5 sekunder. Blå hälsomätare betyder tillfälligt skydd.
+            Alla spelare på marken kan träffas. Sikta med musen, håll vänster musknapp för pistol och tryck K för spark.
+            100 hälsa, 25 skada per träff. Du återkommer efter 2,5 sekunder. Blå hälsomätare betyder tillfälligt skydd.
         </p>
         {#if $officeGameState?.scores.length}<h3 class="text-sm font-bold">Kvällens topplista</h3>
             <ol class="text-sm">
@@ -182,8 +182,8 @@
         role="status"
         class="pointer-events-none fixed top-1/2 left-1/2 z-[100002] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-slate-950/95 p-6 text-center text-white"
     >
-        <strong class="text-2xl text-rose-300">UTSLAGEN</strong>
-        <p>Du är snart tillbaka med fullt liv.</p>
+        <strong class="text-2xl text-rose-300">DÖD</strong>
+        <p>Du återkommer om 2,5 sekunder med fullt liv och ett kort skydd.</p>
     </div>
 {/if}
 
