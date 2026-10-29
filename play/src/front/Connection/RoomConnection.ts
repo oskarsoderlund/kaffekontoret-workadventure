@@ -805,6 +805,12 @@ export class RoomConnection implements RoomConnection {
     };
 
     private cleanupConnection(isNormalClosure: boolean) {
+        // Manual socket closure detaches onclose, so every cleanup path must cancel its heartbeat.
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+            this.timeout = undefined;
+        }
+
         // Cleanup queries:
         for (const query of this.queries.values()) {
             query.reject(new ConnectionClosedError("Socket closed"));

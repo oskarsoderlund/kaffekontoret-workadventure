@@ -26,3 +26,21 @@ synapse/media_store/*
 
 .vscode/settings.json
 play/src/i18n/ko-KR/*.backup
+
+# Local office generated runtime/test files
+local-office/.tls/
+local-office/*.log
+local-office/*-current.txt
+local-office/browser-profile/
+screenshots/
+play/public/office/source.zip
+play/public/office/source.zip.tmp
+local-office/.runtime/
+
+# QA evidence stays local; curate text reports and regression sources explicitly.
+qa-reports/**/logs/
+qa-reports/**/videos/
+qa-reports/**/results*/
+qa-reports/**/test-results/
+qa-reports/**/browser-profile*/
+qa-reports/**/auth-state.json

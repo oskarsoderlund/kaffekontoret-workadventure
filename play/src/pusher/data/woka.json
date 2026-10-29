@@ -2,6 +2,120 @@
     "woka": {
         "collections": [
             {
+                "name": "OSKAR BUSINESSOS · Crew",
+                "position": -2,
+                "textures": [
+                    {
+                        "id": "crew-oski",
+                        "name": "Oski",
+                        "url": "office/avatars/crew/crew-oski.png",
+                        "position": 0
+                    },
+                    {
+                        "id": "crew-captain",
+                        "name": "Kaptenen",
+                        "url": "office/avatars/crew/crew-captain.png",
+                        "position": 1
+                    },
+                    {
+                        "id": "crew-diva",
+                        "name": "Diva",
+                        "url": "office/avatars/crew/crew-diva.png",
+                        "position": 2
+                    },
+                    {
+                        "id": "crew-bouncer",
+                        "name": "Livvakten",
+                        "url": "office/avatars/crew/crew-bouncer.png",
+                        "position": 3
+                    },
+                    {
+                        "id": "crew-hacker",
+                        "name": "Neonhackern",
+                        "url": "office/avatars/crew/crew-hacker.png",
+                        "position": 4
+                    },
+                    {
+                        "id": "crew-party",
+                        "name": "Party",
+                        "url": "office/avatars/crew/crew-party.png",
+                        "position": 5
+                    },
+                    {
+                        "id": "crew-fixer",
+                        "name": "Fixaren",
+                        "url": "office/avatars/crew/crew-fixer.png",
+                        "position": 6
+                    },
+                    {
+                        "id": "crew-punk",
+                        "name": "Punkaren",
+                        "url": "office/avatars/crew/crew-punk.png",
+                        "position": 7
+                    },
+                    {
+                        "id": "crew-gamer",
+                        "name": "Gamern",
+                        "url": "office/avatars/crew/crew-gamer.png",
+                        "position": 8
+                    },
+                    {
+                        "id": "crew-phantom",
+                        "name": "Phantom",
+                        "url": "office/avatars/crew/crew-phantom.png",
+                        "position": 9
+                    },
+                    {
+                        "id": "crew-don",
+                        "name": "Don",
+                        "url": "office/avatars/crew/crew-don.png",
+                        "position": 10
+                    },
+                    {
+                        "id": "crew-rasta",
+                        "name": "Rasta",
+                        "url": "office/avatars/crew/crew-rasta.png",
+                        "position": 11
+                    }
+                ]
+            },
+            {
+                "name": "Sidequest Originals",
+                "position": -1,
+                "textures": [
+                    {
+                        "id": "street-jacket",
+                        "name": "Street Jacket",
+                        "url": "office/avatars/street-jacket.png",
+                        "position": 0
+                    },
+                    {
+                        "id": "neon-runner",
+                        "name": "Neon Runner",
+                        "url": "office/avatars/neon-runner.png",
+                        "position": 1
+                    },
+                    {
+                        "id": "night-boss",
+                        "name": "Night Boss",
+                        "url": "office/avatars/night-boss.png",
+                        "position": 2
+                    },
+                    {
+                        "id": "city-skater",
+                        "name": "City Skater",
+                        "url": "office/avatars/city-skater.png",
+                        "position": 3
+                    },
+                    {
+                        "id": "codex-crew",
+                        "name": "Codex Crew",
+                        "url": "office/avatars/codex-crew.png",
+                        "position": 4
+                    }
+                ]
+            },
+            {
                 "name": "default",
                 "position": 0,
                 "textures": [

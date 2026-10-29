@@ -3,6 +3,7 @@ import { CancelablePromise } from "cancelable-promise";
 import type { SuperLoaderPlugin } from "../Services/SuperLoaderPlugin";
 import { PlayerTexturesKey } from "./PlayerTextures";
 import type { WokaTextureDescriptionInterface, PlayerTextures } from "./PlayerTextures";
+import { getPlayerTextureFrameConfig } from "./OfficeAvatarTexture";
 
 import Texture = Phaser.Textures.Texture;
 import LoaderPlugin = Phaser.Loader.LoaderPlugin;
@@ -25,7 +26,11 @@ export const loadAllLayers = (
                 console.warn("Player resource has no URL", textureDescriptor);
                 return;
             }
-            load.spritesheet(textureDescriptor.id, textureDescriptor.url, { frameWidth: 32, frameHeight: 32 });
+            load.spritesheet(
+                textureDescriptor.id,
+                textureDescriptor.url,
+                getPlayerTextureFrameConfig(textureDescriptor.id),
+            );
         });
         returnArray.push(layerArray);
     });
@@ -41,7 +46,7 @@ export const loadAllDefaultModels = (
             console.warn("Player resource has no URL", playerResource);
             return;
         }
-        load.spritesheet(playerResource.id, playerResource.url, { frameWidth: 32, frameHeight: 32 });
+        load.spritesheet(playerResource.id, playerResource.url, getPlayerTextureFrameConfig(playerResource.id));
     });
     return returnArray;
 };
@@ -50,10 +55,7 @@ export const loadWokaTexture = (
     superLoaderPlugin: SuperLoaderPlugin,
     texture: WokaTextureDescriptionInterface,
 ): CancelablePromise<Texture> => {
-    return superLoaderPlugin.spritesheet(texture.id, texture.url, {
-        frameWidth: 32,
-        frameHeight: 32,
-    });
+    return superLoaderPlugin.spritesheet(texture.id, texture.url, getPlayerTextureFrameConfig(texture.id));
 };
 
 export const lazyLoadPlayerCharacterTextures = (
@@ -63,10 +65,7 @@ export const lazyLoadPlayerCharacterTextures = (
     const promisesList: CancelablePromise<Texture>[] = [];
     for (const texture of textures) {
         promisesList.push(
-            superLoaderPlugin.spritesheet(texture.id, texture.url, {
-                frameWidth: 32,
-                frameHeight: 32,
-            }),
+            superLoaderPlugin.spritesheet(texture.id, texture.url, getPlayerTextureFrameConfig(texture.id)),
         );
     }
     const returnPromise: CancelablePromise<Texture[]> = CancelablePromise.all(promisesList);

@@ -23,6 +23,8 @@ import { lazyLoadPlayerCharacterTextures } from "./PlayerTexturesLoadingManager"
 import { SpeechBubble } from "./SpeechBubble";
 import { SpeechDomElement } from "./SpeechDomElement";
 import { ThinkingCloud } from "./ThinkingCloud";
+import { playOfficeAction } from "./OfficeAction";
+import { isOfficeCrewTexture, OFFICE_CREW_DISPLAY_SIZE } from "./OfficeAvatarTexture";
 
 import Container = Phaser.GameObjects.Container;
 import RenderTexture = Phaser.GameObjects.RenderTexture;
@@ -348,6 +350,10 @@ export abstract class Character extends Container implements OutlineableInterfac
                 throw new CharacterTextureError(`Texture "${texture}" not found`);
             }
             const sprite = new Sprite(this.scene, 0, 0, texture, frame);
+            if (isOfficeCrewTexture(texture)) {
+                sprite.setDisplaySize(OFFICE_CREW_DISPLAY_SIZE, OFFICE_CREW_DISPLAY_SIZE);
+                sprite.setY(-4);
+            }
             this.add(sprite);
             getPlayerAnimations(texture).forEach((d) => {
                 if (!this.scene.anims.exists(d.key)) {
@@ -392,7 +398,9 @@ export abstract class Character extends Container implements OutlineableInterfac
     }
 
     protected updateUsernameDisplayPosition(x = this.x, y = this.y): void {
-        this.usernameDisplay?.setPosition(x, y + playerNameY);
+        // Phaser's Container constructor calls setPosition before our sprite map is initialized.
+        const nameOffset = this.sprites && [...this.sprites.keys()].some(isOfficeCrewTexture) ? -26 : playerNameY;
+        this.usernameDisplay?.setPosition(x, y + nameOffset);
     }
 
     setPosition(x: number, y: number): this {
@@ -579,6 +587,7 @@ export abstract class Character extends Container implements OutlineableInterfac
     }
 
     playEmote(emote: string) {
+        if (playOfficeAction(this, emote)) return;
         this.cancelPreviousEmote();
         const emoteY = -45;
         const span = document.createElement("span");

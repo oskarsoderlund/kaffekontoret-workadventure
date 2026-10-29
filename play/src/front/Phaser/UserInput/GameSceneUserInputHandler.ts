@@ -112,6 +112,11 @@ export class GameSceneUserInputHandler implements UserInputHandlerInterface {
     }
 
     public handlePointerUpEvent(pointer: Pointer, gameObjects: GameObject[]): void {
+        if (
+            this.gameScene.userInputManager.officeGameConsumesClicks &&
+            (pointer.wasTouch || pointer.leftButtonReleased())
+        )
+            return;
         if (pointer.wasTouch || pointer.leftButtonReleased()) {
             for (const object of gameObjects) {
                 if (isActivatable(object)) {

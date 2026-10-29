@@ -1,0 +1,7 @@
+{
+  "title": "Neon Rooftop",
+  "bpm": 96,
+  "durationSeconds": 40.0,
+  "description": "Original instrumental synth/funk composition, generated locally without external samples.",
+  "source": "local-office/scripts/create-background-music.py"
+}

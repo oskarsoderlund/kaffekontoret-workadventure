@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import path from "path";
 import * as Sentry from "@sentry/node";
 import { Metadata } from "@grpc/grpc-js";
@@ -59,6 +60,7 @@ import { VariableError } from "../Services/VariableError";
 import { VariablesManager } from "../Services/VariablesManager";
 import type { AreaPropertyVariable } from "../Services/AreaPropertyVariablesManager";
 import { AreaPropertyVariablesManager } from "../Services/AreaPropertyVariablesManager";
+import { OfficeGame, officeNavigationSchema } from "./OfficeGame";
 import { AreaZoneTracker } from "./AreaZoneTracker";
 import type { BrothersFinder } from "./BrothersFinder";
 import { Group } from "./Group";
@@ -97,6 +99,7 @@ export class GameRoom implements BrothersFinder {
     private readonly wamManager?: WamManager;
     private versionNumber = 1;
     private nextUserId = 1;
+    private officeGame?: OfficeGame;
 
     private roomListeners: Set<RoomSocket> = new Set<RoomSocket>();
     private variableListeners: Map<string, Set<VariableSocket>> = new Map<string, Set<VariableSocket>>();
@@ -384,6 +387,7 @@ export class GameRoom implements BrothersFinder {
             this.leaveGroup(user);
         }
 
+        this.officeGame?.leave(user.id);
         this.users.delete(user.id);
 
         const set = this.usersByUuid.get(user.uuid);
@@ -424,7 +428,8 @@ export class GameRoom implements BrothersFinder {
 
     public updatePosition(user: User, userPosition: PointInterface): void {
         const oldPosition = user.getPosition();
-        user.setPosition(userPosition);
+        const accepted = this.officeGame?.position(user.id, userPosition);
+        user.setPosition(accepted ? { ...userPosition, ...accepted } : userPosition);
         this.updateUserGroup(user);
         this._userMoveStream.next({ user, oldPosition });
     }
@@ -1520,6 +1525,23 @@ export class GameRoom implements BrothersFinder {
     }
 
     public dispatchEvent(name: string, data: unknown, senderId: number | "RoomApi", targetUserIds: number[]): void {
+        if (name.startsWith("office.game.") && senderId !== "RoomApi") {
+            if (name === "office.game.command.v1" && this._roomUrl.endsWith("/office/map.json")) {
+                const user = this.users.get(senderId);
+                if (user) {
+                    if (!this.officeGame) {
+                        const path = process.env.OFFICE_NAVIGATION_FILE;
+                        if (!path) return;
+                        this.officeGame = new OfficeGame(
+                            officeNavigationSchema.parse(JSON.parse(readFileSync(path, "utf8"))),
+                            (event, value, targets) => this.dispatchEvent(event, value, "RoomApi", targets),
+                        );
+                    }
+                    this.officeGame.command(user, data);
+                }
+            }
+            return; // Reserved server events cannot be forged by a room client.
+        }
         if (targetUserIds.length === 0) {
             // Dispatch to all users
             this.sendSubMessageToRoom({
@@ -1613,6 +1635,7 @@ export class GameRoom implements BrothersFinder {
     }
 
     public destroy(): void {
+        this.officeGame?.destroy();
         this._destroyRoomStream.next();
         this.wamManager?.destroy();
         this._userMoveStream.complete();

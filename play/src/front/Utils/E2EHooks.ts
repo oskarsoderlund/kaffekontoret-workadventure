@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 import type { ForceFirstPeerUnilateralDestroyResult } from "../Space/SpacePeerManager/SpacePeerManager";
 import { gameManager } from "../Phaser/Game/GameManager";
+import type { Character } from "../Phaser/Entity/Character";
 
 import Camera = Phaser.Cameras.Scene2D.Camera;
 
@@ -319,6 +320,29 @@ export const e2eHooks = {
     getCurrentPlayerPosition(): Coordinates {
         const player = gameManager.getCurrentGameScene().CurrentPlayer;
         return { x: player.x, y: player.y };
+    },
+    getAvatarRenderSnapshots() {
+        const scene = gameManager.getCurrentGameScene();
+        const snapshot = (character: Character) => ({
+            name: character.playerName,
+            x: character.x,
+            y: character.y,
+            textures: [...character.sprites.values()].map((sprite) => ({
+                id: sprite.texture.key,
+                frame: sprite.frame.name,
+                frameWidth: sprite.frame.width,
+                frameHeight: sprite.frame.height,
+                frameCount: sprite.texture.getFrameNames().length,
+                displayWidth: sprite.displayWidth,
+                displayHeight: sprite.displayHeight,
+                animation: sprite.anims.currentAnim?.key,
+                playing: sprite.anims.isPlaying,
+            })),
+        });
+        return {
+            local: snapshot(scene.CurrentPlayer),
+            remote: [...scene.MapPlayersByKey.values()].map(snapshot),
+        };
     },
     getRemotePlayersSnapshot(): { userId: number; name: string; position: Coordinates }[] {
         return Array.from(gameManager.getCurrentGameScene().getRemotePlayersRepository().getPlayers().values()).map(

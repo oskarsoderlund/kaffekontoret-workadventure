@@ -4,6 +4,7 @@
     import { gameManager } from "../../Phaser/Game/GameManager";
     import { localUserStore } from "../../Connection/LocalUserStore";
     import { ABSOLUTE_PUSHER_URL } from "../../Enum/ComputedConst";
+    import { isOfficeCrewTexture } from "../../Phaser/Entity/OfficeAvatarTexture";
     import Button from "../UI/Button.svelte";
     import WokaPreview from "./WokaPreview.svelte";
     import type { WokaCollection, WokaData, WokaTexture } from "./WokaTypes";
@@ -266,6 +267,8 @@
                                                 ? 'bg-white/50 border-white'
                                                 : 'bg-white/10 hover:bg-white/20 border-transparent'}"
                                             id="woka-{texture.id}"
+                                            aria-label={texture.name}
+                                            aria-pressed={selectedWokaTextureId?.woka === texture.id}
                                             onclick={() => selectTexture(collectionIndex, texture.id)}
                                         >
                                             <WokaImage
@@ -275,6 +278,9 @@
                                                 classList="p-2"
                                                 direction={assetsDirection}
                                             />
+                                            {#if isOfficeCrewTexture(texture.id)}
+                                                <span class="block pb-2 px-1 text-xs text-white">{texture.name}</span>
+                                            {/if}
                                         </button>
                                     {/each}
                                 </div>

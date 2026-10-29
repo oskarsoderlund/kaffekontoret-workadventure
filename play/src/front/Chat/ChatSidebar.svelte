@@ -104,7 +104,7 @@
         id="chat"
         data-testid="chat"
         transition:fly={{ duration: 200, x: isRTL ? sideBarWidth : -sideBarWidth }}
-        style="width: {sideBarWidth}px; max-width: {sideBarWidth}px;"
+        style="width: {sideBarWidth}px; max-width: {sideBarWidth}px; height: calc(100dvh - var(--office-dock-space, 0px));"
         {@attach blocker}
         class=" chatWindow !min-w-[150px] max-sm:!min-w-[150px] bg-contrast/50 backdrop-blur-md p-0"
     >

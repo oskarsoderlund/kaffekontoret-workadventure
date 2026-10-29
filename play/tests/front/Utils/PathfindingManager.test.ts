@@ -29,7 +29,7 @@ vi.mock("easystarjs", () => ({
 vi.mock("../../../src/front/Phaser/Entity/Character", () => ({
     CHARACTER_BODY_HEIGHT: 16,
     CHARACTER_BODY_OFFSET_X: 0,
-    CHARACTER_BODY_OFFSET_Y: 0,
+    CHARACTER_BODY_OFFSET_Y: 8,
 }));
 
 // Mock math utils
@@ -69,6 +69,29 @@ describe("PathfindingManager", () => {
     });
 
     describe("Basic pathfinding functionality", () => {
+        it.each([16, 32])("keeps the avatar at its starting position on a %i px map", async (tileSize) => {
+            pathfindingManager = new PathfindingManager(
+                Array.from({ length: 5 }, () => Array.from({ length: 5 }, () => 0)),
+                { width: tileSize, height: tileSize },
+            );
+            const start = { x: 16, y: 32 };
+            mockEasyStar.findPath.mockImplementation((sx, sy, ex, ey, callback) => {
+                queueMicrotask(() =>
+                    callback([
+                        { x: sx, y: sy },
+                        { x: ex, y: ey },
+                    ]),
+                );
+                return 1;
+            });
+
+            const path = await pathfindingManager.findPathFromGameCoordinates(start, { x: 48, y: 64 });
+
+            // Character converts path points back from the foot anchor to the sprite origin.
+            // At a desk edge, even an 8 px jump can put the avatar inside the adjacent collider.
+            expect({ x: path[0].x, y: path[0].y - 16 }).toEqual(start);
+        });
+
         it("should find a simple path between two walkable points", async () => {
             const start = { x: 16, y: 16 }; // Center of tile (0,0)
             const end = { x: 16, y: 144 }; // Center of tile (0,4)
@@ -183,7 +206,7 @@ describe("PathfindingManager", () => {
                             { x: sx, y: sy },
                             { x: ex, y: ey },
                         ]),
-                    1
+                    1,
                 );
                 return Math.random(); // different instance IDs
             });

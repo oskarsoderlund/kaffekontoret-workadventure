@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { gameManager } from "../Phaser/Game/GameManager";
     import type { Game } from "../Phaser/Game/Game";
     import { errorStore } from "../Stores/ErrorStore";
     import { errorScreenStore } from "../Stores/ErrorScreenStore";
@@ -42,12 +43,14 @@
     import Onboarding from "./Onboarding/Onboarding.svelte";
     import PwaInstallScreen from "./PwaInstall/PwaInstallScreen.svelte";
     import PilotPanel from "./PilotPanel.svelte";
+    import OfficeToolbar from "./OfficeToolbar.svelte";
 
     interface Props {
         game: Game;
     }
 
     let { game }: Props = $props();
+    let officeToolbarHeight = $state(0);
 </script>
 
 <!-- Preload image loader TODO HUGO : Better way ? -->
@@ -101,20 +104,25 @@
     {#if $refreshPromptStore}
         <RefreshPrompt />
     {/if}
-    {#key $forceRefreshChatStore}
-        <ChatSidebar />
-        {#if $mapEditorModeStore}
-            <MapEditor />
-        {/if}
-        {#if $showModalGlobalComminucationVisibilityStore}
-            <GlobalCommunicationModal />
-        {/if}
+    <div class="contents" style:--office-dock-space={`${officeToolbarHeight + 32}px`}>
+        {#key $forceRefreshChatStore}
+            <ChatSidebar />
+            {#if $mapEditorModeStore}
+                <MapEditor />
+            {/if}
+            {#if $showModalGlobalComminucationVisibilityStore}
+                <GlobalCommunicationModal />
+            {/if}
 
-        <Onboarding />
+            <Onboarding />
 
-        <MainLayout />
-    {/key}
-    <MainModal />
+            <MainLayout />
+            {#if gameManager.getCurrentGameScene().getMapUrl().split("?")[0].endsWith("/office/map.json")}
+                <OfficeToolbar bind:height={officeToolbarHeight} />
+            {/if}
+        {/key}
+        <MainModal />
+    </div>
 
     {#if $calendarIsActivatedStore && $isCalendarVisibleStore}
         <Calendar />
